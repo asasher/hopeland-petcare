@@ -15,20 +15,20 @@
      - [x] `vendor.ts`: Vendor related types
      - [x] `accounting.ts`: Financial account types
      - [x] `inventory.ts`: Inventory related types
-   - [ ] Setup Legend State observables in `@/lib/state/`
-     - [ ] Create and configure observables for each domain
-     - [ ] Setup Supabase sync for each observable
+   - [x] Setup Legend State observables in `@/lib/state/`
+     - [x] Create and configure observables for each domain
 
 3. UI Components (Using Shadcn UI)
-   - [ ] Layout Components in `@/components/layout/`
-     - [ ] `layout.tsx`: Main application layout (client component)
-     - [ ] `header.tsx`: App header with navigation
-     - [ ] `sidebar.tsx`: Navigation sidebar
-   - [ ] Common Components in `@/components/ui/`
-     - [ ] Form components using Shadcn UI
-     - [ ] Table components using Shadcn UI
-     - [ ] Dialog components using Shadcn UI
-     - [ ] Card components using Shadcn UI
+   - [x] Layout Components in `@/components/layout/`
+     - [x] `layout.tsx`: Main application layout (client component)
+     - [x] `header.tsx`: App header with navigation
+     - [x] `sidebar.tsx`: Navigation sidebar
+   - [x] Common Components in `@/components/ui/`
+     - [x] Form components using Shadcn UI
+     - [x] Table components using Shadcn UI
+     - [x] Dialog components using Shadcn UI
+     - [x] Card components using Shadcn UI
+   - [ ] Setup authentication with Supabase using Email Magic Link
 
 4. Feature Components
    - [ ] Products Module in `@/components/products/`
@@ -70,7 +70,7 @@
      - [ ] `sales-metrics.tsx`: Sales dashboard
 
 7. Setup Sync with Supabase
-  - [ ] Setup Supabase plugin following https://legendapp.com/open-source/state/v3/sync/supabase/
+   - [ ] Setup Supabase plugin following https://legendapp.com/open-source/state/v3/sync/supabase/
 
 Notes:
 - All components will be client components with "use client" directive
