@@ -4,6 +4,7 @@
    - [x] Initialize Legend State
      - [x] Configure Legend State following https://legendapp.com/open-source/state/v3/intro/getting-started/
      - [x] Create Legend State store configuration in `@/lib/store.ts`
+     - [x] Setup persistence with Local Storage
 
 2. Core Types and State Setup
    - [ ] Create base types in `@/lib/types/`
