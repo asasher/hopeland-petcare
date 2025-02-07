@@ -7,14 +7,14 @@
      - [x] Setup persistence with Local Storage
 
 2. Core Types and State Setup
-   - [ ] Create base types in `@/lib/types/`
-     - [ ] `product.ts`: Product related types
-     - [ ] `sales.ts`: Sales Order related types
-     - [ ] `purchase.ts`: Purchase Order related types
-     - [ ] `customer.ts`: Customer related types
-     - [ ] `vendor.ts`: Vendor related types
-     - [ ] `accounting.ts`: Financial account types
-     - [ ] `inventory.ts`: Inventory related types
+   - [x] Create base types in `@/lib/types/`
+     - [x] `product.ts`: Product related types
+     - [x] `sales.ts`: Sales Order related types
+     - [x] `purchase.ts`: Purchase Order related types
+     - [x] `customer.ts`: Customer related types
+     - [x] `vendor.ts`: Vendor related types
+     - [x] `accounting.ts`: Financial account types
+     - [x] `inventory.ts`: Inventory related types
    - [ ] Setup Legend State observables in `@/lib/state/`
      - [ ] Create and configure observables for each domain
      - [ ] Setup Supabase sync for each observable
