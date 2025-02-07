@@ -1,9 +1,9 @@
 # Hopeland Petcare Tasks
 
 1. Project Setup and Configuration
-   - [] Initialize Legend State
-     - [ ] Configure Legend State following https://legendapp.com/open-source/state/v3/intro/getting-started/
-     - [ ] Create Legend State store configuration in `@/lib/store.ts`
+   - [x] Initialize Legend State
+     - [x] Configure Legend State following https://legendapp.com/open-source/state/v3/intro/getting-started/
+     - [x] Create Legend State store configuration in `@/lib/store.ts`
 
 2. Core Types and State Setup
    - [ ] Create base types in `@/lib/types/`
