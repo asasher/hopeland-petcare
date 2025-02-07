@@ -1,4 +1,6 @@
 import { observable } from "@legendapp/state";
+import { configureSynced, synced } from "@legendapp/state/sync";
+import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 
 // Define the root state type
 export type RootState = {
@@ -56,15 +58,43 @@ export type AccountingState = DomainState<{
 }>;
 export type InventoryState = DomainState<{ items: Record<string, unknown> }>;
 
-// Initialize the root state
+// Setup persistence configuration
+const mySynced = configureSynced(synced, {
+  persist: {
+    plugin: ObservablePersistLocalStorage,
+  },
+});
+
+// Initialize the root state with persistence
 const initialState: RootState = {
-  products: { items: {}, loading: false, error: null },
-  sales: { orders: {}, loading: false, error: null },
-  purchases: { orders: {}, loading: false, error: null },
-  customers: { items: {}, loading: false, error: null },
-  vendors: { items: {}, loading: false, error: null },
-  accounting: { accounts: {}, loading: false, error: null },
-  inventory: { items: {}, loading: false, error: null },
+  products: mySynced({
+    initial: { items: {}, loading: false, error: null },
+    persist: { name: "products" },
+  }),
+  sales: mySynced({
+    initial: { orders: {}, loading: false, error: null },
+    persist: { name: "sales" },
+  }),
+  purchases: mySynced({
+    initial: { orders: {}, loading: false, error: null },
+    persist: { name: "purchases" },
+  }),
+  customers: mySynced({
+    initial: { items: {}, loading: false, error: null },
+    persist: { name: "customers" },
+  }),
+  vendors: mySynced({
+    initial: { items: {}, loading: false, error: null },
+    persist: { name: "vendors" },
+  }),
+  accounting: mySynced({
+    initial: { accounts: {}, loading: false, error: null },
+    persist: { name: "accounting" },
+  }),
+  inventory: mySynced({
+    initial: { items: {}, loading: false, error: null },
+    persist: { name: "inventory" },
+  }),
 };
 
 // Create the store
