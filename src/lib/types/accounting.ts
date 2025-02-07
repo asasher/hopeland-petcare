@@ -1,4 +1,4 @@
-import type { BaseEntity } from "./product";
+import type { BaseEntity } from "./common";
 import type { Customer } from "./customer";
 import type { Vendor } from "./vendor";
 
@@ -55,35 +55,6 @@ export type PaymentMethod =
   | "debit-card"
   | "other";
 
-// Payment terms
-export type PaymentTerms = {
-  dueInDays: number;
-  discountPercentage?: number;
-  discountIfPaidInDays?: number;
-};
-
-// Journal entry line
-export type JournalEntryLine = {
-  accountId: string;
-  description?: string;
-  debit: number;
-  credit: number;
-};
-
-// Journal entry
-export type JournalEntry = BaseEntity & {
-  entryNumber: string;
-  type: TransactionType;
-  date: string;
-  description: string;
-  lines: JournalEntryLine[];
-  reference?: string;
-  status: "draft" | "posted" | "void";
-  postedBy?: string;
-  postedAt?: string;
-  tags: string[];
-};
-
 // Account receivable invoice
 export type AccountReceivable = BaseEntity & {
   invoiceNumber: string;
@@ -94,7 +65,6 @@ export type AccountReceivable = BaseEntity & {
   amount: number;
   balance: number;
   status: "open" | "partial" | "paid" | "overdue" | "void";
-  paymentTerms: PaymentTerms;
   items: Array<{
     description: string;
     quantity: number;
@@ -120,11 +90,9 @@ export type AccountPayable = BaseEntity & {
   vendorId: string;
   vendor?: Vendor;
   date: string;
-  dueDate: string;
   amount: number;
   balance: number;
   status: "open" | "partial" | "paid" | "overdue" | "void";
-  paymentTerms: PaymentTerms;
   items: Array<{
     description: string;
     quantity: number;

@@ -1,3 +1,4 @@
+import { Layout } from "@/components/layout/layout";
 import "@/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
@@ -18,8 +19,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${inter.className}`}>
-      <body>{children}</body>
-      <Toaster />
+      <body>
+        <Layout>{children}</Layout>
+        <Toaster />
+      </body>
     </html>
   );
 }

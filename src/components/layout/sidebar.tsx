@@ -1,174 +1,143 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
-  LayoutDashboard,
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+} from "@/components/ui/sidebar";
+import {
   Package,
   ShoppingCart,
-  Truck,
+  Store,
   Users,
-  UserCircle,
-  Warehouse,
-  Calculator,
-  ChevronDown,
-  ChevronRight,
+  Truck,
+  BarChart,
+  Boxes,
+  LogOut,
+  Settings,
+  User,
 } from "lucide-react";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-interface NavItemProps {
-  href: string;
-  icon: React.ReactNode;
-  label: string;
-  isActive?: boolean;
-  subItems?: { href: string; label: string }[];
-}
+const navItems = [
+  {
+    href: "/products",
+    title: "Products",
+    icon: <Package className="h-4 w-4" />,
+  },
+  {
+    href: "/sales",
+    title: "Sales",
+    icon: <ShoppingCart className="h-4 w-4" />,
+  },
+  {
+    href: "/purchases",
+    title: "Purchases",
+    icon: <Store className="h-4 w-4" />,
+  },
+  {
+    href: "/customers",
+    title: "Customers",
+    icon: <Users className="h-4 w-4" />,
+  },
+  { href: "/vendors", title: "Vendors", icon: <Truck className="h-4 w-4" /> },
+  {
+    href: "/inventory",
+    title: "Inventory",
+    icon: <Boxes className="h-4 w-4" />,
+  },
+  {
+    href: "/reports",
+    title: "Reports",
+    icon: <BarChart className="h-4 w-4" />,
+  },
+];
 
-function NavItem({ href, icon, label, isActive, subItems }: NavItemProps) {
+export function AppSidebar() {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+  const supabase = createClientComponentClient();
 
-  const hasSubItems = subItems && subItems.length > 0;
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Error signing out:", error.message);
+    } else {
+      router.push("/");
+    }
+  };
 
   return (
-    <div>
-      <Button
-        variant={isActive ? "secondary" : "ghost"}
-        className={cn("w-full justify-start", hasSubItems && "justify-between")}
-        onClick={() => {
-          if (hasSubItems) {
-            setIsOpen(!isOpen);
-          } else {
-            router.push(href);
-          }
-        }}
-      >
-        <span className="flex items-center">
-          {icon}
-          <span className="ml-2">{label}</span>
-        </span>
-        {hasSubItems && (
-          <span className="ml-2">
-            {isOpen ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronRight className="h-4 w-4" />
-            )}
-          </span>
-        )}
-      </Button>
-      {hasSubItems && isOpen && (
-        <div className="ml-4 mt-1 space-y-1">
-          {subItems.map((item) => (
-            <Button
-              key={item.href}
-              variant="ghost"
-              className="w-full justify-start pl-8"
-              onClick={() => router.push(item.href)}
-            >
-              {item.label}
+    <Sidebar>
+      <SidebarHeader>
+        <Link href="/">
+          <h2 className="text-lg font-semibold tracking-tight">
+            Hopeland Petcare
+          </h2>
+        </Link>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarMenu>
+            {navItems.map((item) => (
+              <SidebarMenuItem key={item.href}>
+                <SidebarMenuButton asChild>
+                  <Link href={item.href}>
+                    {item.icon}
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="w-full justify-start gap-2">
+              <Avatar className="h-6 w-6">
+                <AvatarImage src="/placeholder-avatar.jpg" alt="User" />
+                <AvatarFallback>U</AvatarFallback>
+              </Avatar>
+              <span>User Account</span>
             </Button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-export function Sidebar() {
-  const pathname = usePathname();
-
-  const navigation = [
-    {
-      href: "/",
-      icon: <LayoutDashboard className="h-4 w-4" />,
-      label: "Dashboard",
-    },
-    {
-      href: "/products",
-      icon: <Package className="h-4 w-4" />,
-      label: "Products",
-      subItems: [
-        { href: "/products/categories", label: "Categories" },
-        { href: "/products/variants", label: "Variants" },
-      ],
-    },
-    {
-      href: "/sales",
-      icon: <ShoppingCart className="h-4 w-4" />,
-      label: "Sales",
-      subItems: [
-        { href: "/sales/orders", label: "Orders" },
-        { href: "/sales/returns", label: "Returns" },
-      ],
-    },
-    {
-      href: "/purchases",
-      icon: <Truck className="h-4 w-4" />,
-      label: "Purchases",
-      subItems: [
-        { href: "/purchases/orders", label: "Orders" },
-        { href: "/purchases/returns", label: "Returns" },
-      ],
-    },
-    {
-      href: "/customers",
-      icon: <Users className="h-4 w-4" />,
-      label: "Customers",
-    },
-    {
-      href: "/vendors",
-      icon: <UserCircle className="h-4 w-4" />,
-      label: "Vendors",
-    },
-    {
-      href: "/inventory",
-      icon: <Warehouse className="h-4 w-4" />,
-      label: "Inventory",
-      subItems: [
-        { href: "/inventory/stock", label: "Stock Levels" },
-        { href: "/inventory/adjustments", label: "Adjustments" },
-        { href: "/inventory/transfers", label: "Transfers" },
-      ],
-    },
-    {
-      href: "/accounting",
-      icon: <Calculator className="h-4 w-4" />,
-      label: "Accounting",
-      subItems: [
-        { href: "/accounting/chart", label: "Chart of Accounts" },
-        { href: "/accounting/journals", label: "Journal Entries" },
-        { href: "/accounting/receivables", label: "Receivables" },
-        { href: "/accounting/payables", label: "Payables" },
-      ],
-    },
-  ];
-
-  return (
-    <div className="bg-background flex h-full w-64 flex-col border-r">
-      <div className="flex-1 space-y-1 p-4">
-        {navigation.map((item) => (
-          <NavItem
-            key={item.href}
-            href={item.href}
-            icon={item.icon}
-            label={item.label}
-            isActive={pathname === item.href}
-            subItems={item.subItems}
-          />
-        ))}
-      </div>
-      <Separator />
-      <div className="p-4">
-        <Button variant="ghost" className="w-full justify-start">
-          <span className="flex items-center">
-            <Users className="h-4 w-4" />
-            <span className="ml-2">Team</span>
-          </span>
-        </Button>
-      </div>
-    </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => router.push("/profile")}>
+              <User className="mr-2 h-4 w-4" />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/settings")}>
+              <Settings className="mr-2 h-4 w-4" />
+              Settings
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleSignOut}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarFooter>
+    </Sidebar>
   );
 }

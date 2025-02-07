@@ -1,4 +1,4 @@
-import type { BaseEntity } from "./product";
+import type { BaseEntity } from "./common";
 
 // Inventory transaction types
 export type InventoryTransactionType =

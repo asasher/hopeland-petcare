@@ -1,51 +1,33 @@
-// Common types
-export type BaseEntity = {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-};
+import type { BaseEntity } from "./common";
 
-// Product category and subcategory
-export type ProductCategory = {
-  id: string;
+// Product category
+export type ProductCategory = BaseEntity & {
   name: string;
   description?: string;
   parentId?: string;
+  isActive: boolean;
 };
 
-// Product variants and attributes
+// Product attribute
 export type ProductAttribute = {
   name: string;
   value: string;
 };
 
-export type ProductVariant = BaseEntity & {
-  sku: string;
-  barcode?: string;
-  price: number;
-  costPrice: number;
-  attributes: ProductAttribute[];
-  stockQuantity: number;
-  reorderPoint: number;
-  reorderQuantity: number;
-};
-
-// Main product type
+// Product type
 export type Product = BaseEntity & {
   name: string;
   description: string;
-  categoryId: string;
-  brand?: string;
   isActive: boolean;
-  images: string[];
-  variants: ProductVariant[];
-  defaultVariantId: string;
-  taxRate: number;
   notes?: string;
   tags: string[];
+  images: {
+    id: string;
+    url: string;
+    alt?: string;
+    position: number;
+  }[];
 };
 
-// Product with relationships
-export type ProductWithRelations = Product & {
-  category: ProductCategory;
-};
+// Product with relations
+export type ProductWithRelations = Product;

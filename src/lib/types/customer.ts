@@ -1,4 +1,4 @@
-import type { BaseEntity } from "./product";
+import type { BaseEntity } from "./common";
 
 // Customer status
 export type CustomerStatus = "active" | "inactive" | "blocked";

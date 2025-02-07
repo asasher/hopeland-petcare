@@ -1,4 +1,4 @@
-import type { BaseEntity } from "./product";
+import type { BaseEntity } from "./common";
 
 // Sales order status
 export type SalesOrderStatus =

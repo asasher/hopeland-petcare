@@ -1,4 +1,15 @@
-# Hopeland Petcare Tasks
+# Hopeland Petcare
+
+## Instructions
+
+1. After each task run `pnpm lint`, if there are errors fix them, ingore warnings.
+2. After each task is completed, mark it as done in `tasks.md` file.
+3. After each task is completed run `git add -A` and `git commit -m "feat: <task-description>"`. Do not push.
+4. Do not ask for confirmation before running commands, you can run them directly.
+5. Do not ask for confirmation before running next task, just continue.
+6. After each task read `tasks.md` file again to remeber these instructions.
+
+## Tasks
 
 1. Project Setup and Configuration
    - [x] Initialize Legend State
@@ -28,12 +39,12 @@
      - [x] Table components using Shadcn UI
      - [x] Dialog components using Shadcn UI
      - [x] Card components using Shadcn UI
-   - [ ] Setup authentication with Supabase using Email Magic Link
+   - [x] Setup authentication with Supabase using Email Magic Link
 
 4. Feature Components
-   - [ ] Products Module in `@/components/products/`
-     - [ ] `product-list.tsx`: Products table (client component)
-     - [ ] `product-form.tsx`: Add/Edit product form
+   - [x] Products Module in `@/components/products/`
+     - [x] `product-list.tsx`: Products table (client component)
+     - [x] `product-form.tsx`: Add/Edit product form
    - [ ] Sales Module in `@/components/sales/`
      - [ ] `sales-order-list.tsx`: Sales orders table
      - [ ] `sales-order-form.tsx`: Sales order form
