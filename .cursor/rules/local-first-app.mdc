@@ -38,4 +38,4 @@ Prefer inference instead of explicit type declaration.
 
 After each task make sure to run `pnpm lint` and fix all errors, you can ignore warnings.
 After each task make sure to add the files and commit with appropriate message, do not push.
-After each task make sure to mark the task as done in `cursortasks.md` file.
+After each task make sure to mark the task as done in `tasks.md` file.

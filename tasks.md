@@ -45,9 +45,9 @@
    - [x] Products Module in `@/components/products/`
      - [x] `product-list.tsx`: Products table (client component)
      - [x] `product-form.tsx`: Add/Edit product form
-   - [ ] Sales Module in `@/components/sales/`
-     - [ ] `sales-order-list.tsx`: Sales orders table
-     - [ ] `sales-order-form.tsx`: Sales order form
+   - [x] Sales Module in `@/components/sales/`
+     - [x] `sales-order-list.tsx`: Sales orders table
+     - [x] `sales-order-form.tsx`: Sales order form
    - [ ] Purchase Module in `@/components/purchases/`
      - [ ] `purchase-order-list.tsx`: Purchase orders table
      - [ ] `purchase-order-form.tsx`: Purchase order form
