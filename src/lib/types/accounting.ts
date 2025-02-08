@@ -122,3 +122,31 @@ export type AgingReportItem = {
   totalAmount: number;
   buckets: Record<AgingBucket, number>;
 };
+
+// Journal entry status
+export type JournalEntryStatus = "draft" | "posted" | "voided";
+
+// Journal entry line item
+export type JournalEntryLine = {
+  accountId: string;
+  description: string;
+  debit: number;
+  credit: number;
+};
+
+// Journal entry
+export type JournalEntry = BaseEntity & {
+  date: string;
+  reference: string;
+  description: string;
+  type: TransactionType;
+  status: JournalEntryStatus;
+  amount: number;
+  lines: JournalEntryLine[];
+  notes?: string;
+  tags: string[];
+  postedAt?: string;
+  postedBy?: string;
+  voidedAt?: string;
+  voidedBy?: string;
+};

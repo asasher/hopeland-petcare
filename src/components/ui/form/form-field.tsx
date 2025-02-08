@@ -22,9 +22,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { useFormContext } from "react-hook-form";
 
-interface Option {
+interface Option<T extends { toString(): string } = string> {
   label: string;
-  value: string;
+  value: T;
 }
 
 interface FormInputFieldProps {
@@ -45,10 +45,10 @@ interface FormTextAreaFieldProps {
   rows?: number;
 }
 
-interface FormSelectFieldProps {
+interface FormSelectFieldProps<T extends { toString(): string } = string> {
   name: string;
   label: string;
-  options: Option[];
+  options: Option<T>[];
   placeholder?: string;
   description?: string;
   required?: boolean;
@@ -84,7 +84,7 @@ export function FormInputField({
         <FormItem>
           <FormLabel>
             {label}
-            {required && <span className="text-destructive ml-1">*</span>}
+            {required && <span className="ml-1 text-destructive">*</span>}
           </FormLabel>
           <FormControl>
             <Input type={type} placeholder={placeholder} {...field} />
@@ -115,7 +115,7 @@ export function FormTextAreaField({
         <FormItem>
           <FormLabel>
             {label}
-            {required && <span className="text-destructive ml-1">*</span>}
+            {required && <span className="ml-1 text-destructive">*</span>}
           </FormLabel>
           <FormControl>
             <Textarea placeholder={placeholder} rows={rows} {...field} />
@@ -128,14 +128,14 @@ export function FormTextAreaField({
   );
 }
 
-export function FormSelectField({
+export function FormSelectField<T extends { toString(): string } = string>({
   name,
   label,
   options,
   placeholder,
   description,
   required,
-}: FormSelectFieldProps) {
+}: FormSelectFieldProps<T>) {
   const form = useFormContext();
 
   return (
@@ -146,9 +146,12 @@ export function FormSelectField({
         <FormItem>
           <FormLabel>
             {label}
-            {required && <span className="text-destructive ml-1">*</span>}
+            {required && <span className="ml-1 text-destructive">*</span>}
           </FormLabel>
-          <Select onValueChange={field.onChange} value={field.value as string}>
+          <Select
+            onValueChange={field.onChange}
+            value={(field.value as T)?.toString() ?? ""}
+          >
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder={placeholder} />
@@ -156,7 +159,10 @@ export function FormSelectField({
             </FormControl>
             <SelectContent>
               {options.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem
+                  key={option.value.toString()}
+                  value={option.value.toString()}
+                >
                   {option.label}
                 </SelectItem>
               ))}
