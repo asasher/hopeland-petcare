@@ -77,3 +77,25 @@ export type InventoryAdjustment = BaseEntity & {
   postedAt?: string;
   notes?: string;
 };
+
+// Inventory item status
+export type InventoryItemStatus = "active" | "inactive" | "discontinued";
+
+// Inventory item
+export type InventoryItem = BaseEntity & {
+  code: string;
+  name: string;
+  description?: string;
+  category: string;
+  unit: string;
+  stockLevel: number;
+  reservedQuantity: number;
+  availableQuantity: number;
+  reorderPoint: number;
+  reorderQuantity: number;
+  averageCost: number;
+  location: string;
+  status: InventoryItemStatus;
+  notes?: string;
+  tags: string[];
+};

@@ -8,10 +8,11 @@ import type {
   InventoryTransaction,
   InventoryAdjustment,
   InventoryTransactionType,
+  InventoryItem,
 } from "../types/inventory";
 
 // Inventory specific state
-type InventoryState = BaseState<StockLevel> & {
+type InventoryState = BaseState<InventoryItem> & {
   locations: Record<string, Location>;
   stockLevels: Record<string, StockLevel>;
   transactions: Record<string, InventoryTransaction>;
@@ -36,7 +37,7 @@ const initialState: Partial<InventoryState> = {
 };
 
 // Create the store with type
-export const inventoryStore = createDomainStore<StockLevel>(
+export const inventoryStore = createDomainStore<InventoryItem>(
   "inventory",
   initialState,
 ) as unknown as Observable<InventoryState>;
