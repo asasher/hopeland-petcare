@@ -54,9 +54,9 @@
    - [x] Customer Module in `@/components/customers/`
      - [x] `customer-list.tsx`: Customers table
      - [x] `customer-form.tsx`: Customer form
-   - [ ] Vendor Module in `@/components/vendors/`
-     - [ ] `vendor-list.tsx`: Vendors table
-     - [ ] `vendor-form.tsx`: Vendor form
+   - [x] Vendor Module in `@/components/vendors/`
+     - [x] `vendor-list.tsx`: Vendors table
+     - [x] `vendor-form.tsx`: Vendor form
    - [ ] Accounting Module in `@/components/accounting/`
      - [ ] `chart-accounts.tsx`: Chart of accounts
      - [ ] `journal-entries.tsx`: Journal entries
