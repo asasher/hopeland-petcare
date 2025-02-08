@@ -57,22 +57,22 @@
    - [x] Vendor Module in `@/components/vendors/`
      - [x] `vendor-list.tsx`: Vendors table
      - [x] `vendor-form.tsx`: Vendor form
-   - [ ] Accounting Module in `@/components/accounting/`
-     - [ ] `chart-accounts.tsx`: Chart of accounts
-     - [ ] `journal-entries.tsx`: Journal entries
-   - [ ] Inventory Module in `@/components/inventory/`
-     - [ ] `inventory-list.tsx`: Inventory table
-     - [ ] `adjustment-form.tsx`: Adjustment form
+   - [x] Accounting Module in `@/components/accounting/`
+     - [x] `chart-accounts.tsx`: Chart of accounts
+     - [x] `journal-entries.tsx`: Journal entries
+   - [x] Inventory Module in `@/components/inventory/`
+     - [x] `inventory-list.tsx`: Inventory table
+     - [x] `adjustment-form.tsx`: Adjustment form
 
 5. Pages (App Router)
-   - [ ] Create page components in `@/app/`
-     - [ ] `products/page.tsx`
-     - [ ] `sales/page.tsx`
-     - [ ] `purchases/page.tsx`
-     - [ ] `customers/page.tsx`
-     - [ ] `vendors/page.tsx`
-     - [ ] `accounting/page.tsx`
-     - [ ] `inventory/page.tsx`
+   - [x] Create page components in `@/app/`
+     - [x] `products/page.tsx`
+     - [x] `sales/page.tsx`
+     - [x] `purchases/page.tsx`
+     - [x] `customers/page.tsx`
+     - [x] `vendors/page.tsx`
+     - [x] `accounting/page.tsx`
+     - [x] `inventory/page.tsx`
 
 6. Dashboard
    - [ ] Create dashboard components in `@/components/dashboard/`
