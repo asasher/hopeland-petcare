@@ -51,9 +51,9 @@
    - [x] Purchase Module in `@/components/purchases/`
      - [x] `purchase-order-list.tsx`: Purchase orders table
      - [x] `purchase-order-form.tsx`: Purchase order form
-   - [ ] Customer Module in `@/components/customers/`
-     - [ ] `customer-list.tsx`: Customers table
-     - [ ] `customer-form.tsx`: Customer form
+   - [x] Customer Module in `@/components/customers/`
+     - [x] `customer-list.tsx`: Customers table
+     - [x] `customer-form.tsx`: Customer form
    - [ ] Vendor Module in `@/components/vendors/`
      - [ ] `vendor-list.tsx`: Vendors table
      - [ ] `vendor-form.tsx`: Vendor form
