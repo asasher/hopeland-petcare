@@ -23,7 +23,6 @@ const productSchema = z.object({
   description: z.string().min(1, "Description is required"),
   isActive: z.boolean().default(true),
   notes: z.string().optional(),
-  tags: z.array(z.string()),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -33,7 +32,6 @@ const defaultFormValues: ProductFormValues = {
   description: "",
   isActive: true,
   notes: "",
-  tags: [],
 };
 
 interface ProductFormProps {
@@ -58,7 +56,6 @@ export function ProductForm({ open, onClose, initialData }: ProductFormProps) {
           id: crypto.randomUUID(),
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          images: [],
           ...data,
         });
       }

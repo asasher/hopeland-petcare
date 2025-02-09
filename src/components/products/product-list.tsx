@@ -24,11 +24,6 @@ const columns: ColumnDef<Product>[] = [
     header: "Status",
     cell: ({ row }) => (row.original.isActive ? "Active" : "Inactive"),
   },
-  {
-    accessorKey: "tags",
-    header: "Tags",
-    cell: ({ row }) => row.original.tags.join(", "),
-  },
 ];
 
 export function ProductList() {
@@ -56,7 +51,7 @@ export function ProductList() {
           searchKey="name"
           toolbar={
             <div className="flex items-center space-x-2">
-              <span className="text-muted-foreground text-sm">
+              <span className="text-sm text-muted-foreground">
                 {productList.length} products
               </span>
             </div>
