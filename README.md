@@ -75,12 +75,17 @@
      - [x] `inventory/page.tsx`
 
 6. Dashboard
-   - [ ] Create dashboard components in `@/components/dashboard/`
-     - [ ] `inventory-metrics.tsx`: Inventory dashboard
-     - [ ] `financial-metrics.tsx`: Financial dashboard
-     - [ ] `sales-metrics.tsx`: Sales dashboard
+   - [x] Create dashboard components in `@/components/dashboard/`
+     - [x] `inventory-metrics.tsx`: Inventory dashboard
+     - [x] `financial-metrics.tsx`: Financial dashboard
+     - [x] `sales-metrics.tsx`: Sales dashboard
+     - [x] `purchases-metrics.tsx`: Purchases dashboard
+     - [x] `index.tsx`: Main dashboard component
 
-7. Setup Sync with Supabase
+7. Create the home page
+   - [x] Create the home page in `@/app/page.tsx` with the dashboard components
+
+8. Setup Sync with Supabase
    - [ ] Setup Supabase plugin following https://legendapp.com/open-source/state/v3/sync/supabase/
 
 Notes:
