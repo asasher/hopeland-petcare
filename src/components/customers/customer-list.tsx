@@ -16,12 +16,22 @@ const columns: ColumnDef<Customer>[] = [
     header: "Name",
   },
   {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "phone",
-    header: "Phone",
+    accessorKey: "contacts",
+    header: "Primary Contact",
+    cell: ({ row }) => {
+      const primaryContact = row.original.contacts[0];
+      if (!primaryContact) return "-";
+      return (
+        <div>
+          <div>{primaryContact.name}</div>
+          <div className="text-sm text-muted-foreground">
+            {primaryContact.contactType === "email"
+              ? primaryContact.email
+              : primaryContact.phone}
+          </div>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "isActive",
