@@ -86,9 +86,9 @@
    - [x] Create the home page in `@/app/page.tsx` with the dashboard components
 
 8. Checkpoint
-  - [ ] Remove the Reports link and the reports page since we don't need it
-  - [ ] Run pnpm lint again and fix all errors and warnings
-  - [ ] Git add and commit the changes
+  - [x] Remove the Reports link and the reports page since we don't need it
+  - [x] Run pnpm lint again and fix all errors and warnings
+  - [x] Git add and commit the changes
 
 9. Setup Sync with Supabase
    - [ ] Setup Supabase plugin following https://legendapp.com/open-source/state/v3/sync/supabase/
