@@ -1,29 +1,92 @@
-# Create T3 App
+# Hopeland Pet Care
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## Instructions
 
-## What's next? How do I make an app with this?
+1. After each task run `pnpm lint`, if there are errors fix them, ingore warnings.
+2. After each task is completed, mark it as done in `README.md` file.
+3. After each task is completed run `git add -A` and `git commit -m "feat: <task-description>"`. Do not push.
+4. Do not ask for confirmation before running commands, you can run them directly.
+5. Do not ask for confirmation before running next task, just continue.
+6. After each task read `README.md` file again to remeber these instructions.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Tasks
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+1. Project Setup and Configuration
+   - [x] Initialize Legend State
+     - [x] Configure Legend State following https://legendapp.com/open-source/state/v3/intro/getting-started/
+     - [x] Create Legend State store configuration in `@/lib/store.ts`
+     - [x] Setup persistence with Local Storage
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+2. Core Types and State Setup
+   - [x] Create base types in `@/lib/types/`
+     - [x] `product.ts`: Product related types
+     - [x] `sales.ts`: Sales Order related types
+     - [x] `purchase.ts`: Purchase Order related types
+     - [x] `customer.ts`: Customer related types
+     - [x] `vendor.ts`: Vendor related types
+     - [x] `accounting.ts`: Financial account types
+     - [x] `inventory.ts`: Inventory related types
+   - [x] Setup Legend State observables in `@/lib/state/`
+     - [x] Create and configure observables for each domain
 
-## Learn More
+3. UI Components (Using Shadcn UI)
+   - [x] Layout Components in `@/components/layout/`
+     - [x] `layout.tsx`: Main application layout (client component)
+     - [x] `header.tsx`: App header with navigation
+     - [x] `sidebar.tsx`: Navigation sidebar
+   - [x] Common Components in `@/components/ui/`
+     - [x] Form components using Shadcn UI
+     - [x] Table components using Shadcn UI
+     - [x] Dialog components using Shadcn UI
+     - [x] Card components using Shadcn UI
+   - [x] Setup authentication with Supabase using Email Magic Link
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+4. Feature Components
+   - [x] Products Module in `@/components/products/`
+     - [x] `product-list.tsx`: Products table (client component)
+     - [x] `product-form.tsx`: Add/Edit product form
+   - [x] Sales Module in `@/components/sales/`
+     - [x] `sales-order-list.tsx`: Sales orders table
+     - [x] `sales-order-form.tsx`: Sales order form
+   - [x] Purchase Module in `@/components/purchases/`
+     - [x] `purchase-order-list.tsx`: Purchase orders table
+     - [x] `purchase-order-form.tsx`: Purchase order form
+   - [x] Customer Module in `@/components/customers/`
+     - [x] `customer-list.tsx`: Customers table
+     - [x] `customer-form.tsx`: Customer form
+   - [x] Vendor Module in `@/components/vendors/`
+     - [x] `vendor-list.tsx`: Vendors table
+     - [x] `vendor-form.tsx`: Vendor form
+   - [x] Accounting Module in `@/components/accounting/`
+     - [x] `chart-accounts.tsx`: Chart of accounts
+     - [x] `journal-entries.tsx`: Journal entries
+   - [x] Inventory Module in `@/components/inventory/`
+     - [x] `inventory-list.tsx`: Inventory table
+     - [x] `adjustment-form.tsx`: Adjustment form
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+5. Pages (App Router)
+   - [x] Create page components in `@/app/`
+     - [x] `products/page.tsx`
+     - [x] `sales/page.tsx`
+     - [x] `purchases/page.tsx`
+     - [x] `customers/page.tsx`
+     - [x] `vendors/page.tsx`
+     - [x] `accounting/page.tsx`
+     - [x] `inventory/page.tsx`
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+6. Dashboard
+   - [ ] Create dashboard components in `@/components/dashboard/`
+     - [ ] `inventory-metrics.tsx`: Inventory dashboard
+     - [ ] `financial-metrics.tsx`: Financial dashboard
+     - [ ] `sales-metrics.tsx`: Sales dashboard
 
-## How do I deploy this?
+7. Setup Sync with Supabase
+   - [ ] Setup Supabase plugin following https://legendapp.com/open-source/state/v3/sync/supabase/
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Notes:
+- All components will be client components with "use client" directive
+- Using named exports for all components
+- Using Shadcn UI components throughout
+- Using Lucide icons for all icons
+- Using Legend State with Supabase plugin for state management
+- Following TypeScript best practices (types over interfaces, inference where possible)
