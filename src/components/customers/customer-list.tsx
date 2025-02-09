@@ -27,9 +27,7 @@ export function CustomerList() {
     });
 
     // Cleanup subscription
-    return () => {
-      unsubscribe();
-    };
+    return unsubscribe;
   }, [customers]);
 
   const fuse = useMemo(
