@@ -95,7 +95,7 @@
   - [x] Create a CustomerCard component, displaying all customer information with proper visual hierarchy
   - [x] Change CustomerList from DataTable to a list of cards with search and filter
   - [x] Add search bar to the top of the CustomerList with fuzzy search on each of the customer fields using fuse.js, install fuse.js if not installed using `pnpm add fuse.js`
-  
+
 
 10. Setup Sync with Supabase
    - [ ] Setup Supabase plugin following https://legendapp.com/open-source/state/v3/sync/supabase/

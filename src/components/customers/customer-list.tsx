@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search } from "lucide-react";
@@ -15,7 +15,22 @@ export function CustomerList() {
   const [isCreating, setIsCreating] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const customers = useObservable(customerStore.items);
-  const customerList = Object.values(customers.get() || {});
+  const [customerList, setCustomerList] = useState<Customer[]>([]);
+
+  useEffect(() => {
+    // Initial value
+    setCustomerList(Object.values(customers.get() || {}));
+
+    // Subscribe to changes
+    const unsubscribe = customers.onChange((value) => {
+      setCustomerList(Object.values(value || {}));
+    });
+
+    // Cleanup subscription
+    return () => {
+      unsubscribe();
+    };
+  }, [customers]);
 
   const fuse = useMemo(
     () =>

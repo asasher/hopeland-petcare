@@ -30,9 +30,6 @@ export function CustomerCard({ customer, onClick }: CustomerCardProps) {
       <CardContent className="space-y-4">
         {customer.contacts.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-sm font-medium text-muted-foreground">
-              Contacts
-            </h4>
             <div className="space-y-2">
               {customer.contacts.map((contact, index) => (
                 <div key={index} className="flex items-start space-x-2 text-sm">
@@ -60,7 +57,6 @@ export function CustomerCard({ customer, onClick }: CustomerCardProps) {
           </div>
         )}
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-muted-foreground">Address</h4>
           <div className="flex items-start space-x-2 text-sm">
             <MapPin className="mt-0.5 h-4 w-4 text-muted-foreground" />
             <div>
