@@ -43,7 +43,7 @@ const columns: ColumnDef<Vendor>[] = [
   {
     accessorKey: "rating",
     header: "Rating",
-    cell: ({ row }) => row.original.rating || "-",
+    cell: ({ row }) => row.original.rating ?? "-",
   },
   {
     accessorKey: "leadTime",

@@ -23,6 +23,7 @@ import {
   LogOut,
   Settings,
   User,
+  DollarSign,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -64,9 +65,9 @@ const navItems = [
     icon: <Boxes className="h-4 w-4" />,
   },
   {
-    href: "/reports",
-    title: "Reports",
-    icon: <BarChart className="h-4 w-4" />,
+    href: "/accounting",
+    title: "Accounting",
+    icon: <DollarSign className="h-4 w-4" />,
   },
 ];
 

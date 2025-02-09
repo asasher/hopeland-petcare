@@ -41,7 +41,7 @@ export function InventoryMetrics() {
 
   const transactionsMap = inventory.transactions.get() ?? {};
   const allTransactions = Object.values(transactionsMap);
-  const recentTransactions = allTransactions
+  const recentTransactions = (allTransactions ?? [])
     .sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
