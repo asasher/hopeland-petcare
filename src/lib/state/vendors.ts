@@ -2,25 +2,21 @@ import { computed } from "@legendapp/state";
 import type { Observable } from "@legendapp/state";
 import { createDomainStore } from "./base";
 import type { BaseState } from "./base";
-import type { Vendor, VendorStatus } from "../types/vendor";
+import type { Vendor } from "../types/vendor";
 import type { Address } from "../types/common";
 
 // Vendor specific state
 type VendorState = BaseState<Vendor> & {
-  vendorsByStatus: Record<VendorStatus, string[]>;
   totalVendors: number;
   activeVendors: number;
-  totalPayables: number;
   defaultAddresses: Record<string, Address>;
 };
 
 // Initialize state
 const initialState: Partial<VendorState> = {
   items: {},
-  vendorsByStatus: {} as Record<VendorStatus, string[]>,
   totalVendors: 0,
   activeVendors: 0,
-  totalPayables: 0,
   defaultAddresses: {},
 };
 
@@ -33,7 +29,7 @@ export const vendorStore = createDomainStore<Vendor>(
 // Computed values
 export const activeVendors = computed(() => {
   const vendors = Object.values(vendorStore.items.peek() || {}) as Vendor[];
-  return vendors.filter((vendor) => vendor.status === "active");
+  return vendors.filter((vendor) => vendor.isActive);
 });
 
 // Actions
@@ -60,13 +56,13 @@ export const vendorActions = {
     vendorStore.items.set(items);
   },
 
-  updateStatus: (id: string, status: VendorStatus) => {
+  updateActive: (id: string, isActive: boolean) => {
     const items = vendorStore.items.peek() || {};
     const current = items[id];
     if (current) {
       vendorStore.items.set({
         ...items,
-        [id]: { ...current, status },
+        [id]: { ...current, isActive },
       });
     }
   },
