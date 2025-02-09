@@ -15,59 +15,56 @@ import {
   DialogTitle,
   DialogPortal,
 } from "@/components/ui/dialog";
-import type { Vendor, VendorStatus } from "@/lib/types/vendor";
+import type { Vendor } from "@/lib/types/vendor";
 import { vendorActions } from "@/lib/state/vendors";
 
 const vendorSchema = z.object({
-  code: z.string().min(1, "Vendor code is required"),
   name: z.string().min(1, "Name is required"),
-  status: z.enum(["active", "inactive", "blocked"] as const),
-  addresses: z.array(
-    z.object({
-      type: z.enum(["billing", "shipping"] as const),
-      address: z.string().min(1),
-      city: z.string().min(1),
-      state: z.string().min(1),
-      country: z.string().min(1),
-      postalCode: z.string().min(1),
-      isDefault: z.boolean(),
-    }),
-  ),
+  isActive: z.boolean().default(true),
+  address: z.object({
+    street: z.string().min(1, "Street is required"),
+    city: z.string().min(1, "City is required"),
+    state: z.string().min(1, "State is required"),
+    postalCode: z.string().min(1, "Postal code is required"),
+    country: z.string().min(1, "Country is required"),
+  }),
   contacts: z.array(
-    z.object({
-      type: z.enum(["phone", "email", "other"] as const),
-      value: z.string().min(1),
-      isPrimary: z.boolean(),
-    }),
+    z.discriminatedUnion("contactType", [
+      z.object({
+        contactType: z.literal("email"),
+        name: z.string().min(1, "Name is required"),
+        email: z.string().email("Invalid email"),
+        phone: z.string().optional(),
+        role: z.string().min(1, "Role is required"),
+      }),
+      z.object({
+        contactType: z.literal("phone"),
+        name: z.string().min(1, "Name is required"),
+        email: z.string().email().optional(),
+        phone: z.string().min(1, "Phone is required"),
+        role: z.string().min(1, "Role is required"),
+      }),
+    ]),
   ),
-  taxId: z.string().optional(),
-  website: z.string().optional(),
   notes: z.string().optional(),
-  tags: z.array(z.string()),
-  creditLimit: z.number().optional(),
-  balance: z.number(),
-  rating: z.number().min(0).max(5).optional(),
   leadTime: z.number().min(0).optional(),
-  minimumOrderValue: z.number().min(0).optional(),
 });
 
 type VendorFormValues = z.infer<typeof vendorSchema>;
 
 const defaultFormValues: VendorFormValues = {
-  code: "",
   name: "",
-  status: "active",
-  addresses: [],
+  isActive: true,
+  address: {
+    street: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    country: "",
+  },
   contacts: [],
-  tags: [],
-  balance: 0,
+  notes: "",
 };
-
-const statusOptions = [
-  { label: "Active", value: "active" },
-  { label: "Inactive", value: "inactive" },
-  { label: "Blocked", value: "blocked" },
-];
 
 interface VendorFormProps {
   open: boolean;
@@ -121,59 +118,46 @@ export function VendorForm({ open, onClose, initialData }: VendorFormProps) {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <FormInputField
-                    name="code"
-                    label="Vendor Code"
-                    placeholder="Enter vendor code"
-                    required
-                  />
-                  <FormInputField
                     name="name"
                     label="Name"
                     placeholder="Enter vendor name"
                     required
                   />
-                  <FormSelectField
-                    name="status"
-                    label="Status"
-                    options={statusOptions}
+                  <FormInputField
+                    name="address.street"
+                    label="Street"
+                    placeholder="Enter street address"
                     required
                   />
                   <FormInputField
-                    name="taxId"
-                    label="Tax ID"
-                    placeholder="Enter tax ID"
+                    name="address.city"
+                    label="City"
+                    placeholder="Enter city"
+                    required
                   />
                   <FormInputField
-                    name="website"
-                    label="Website"
-                    placeholder="Enter website URL"
+                    name="address.state"
+                    label="State"
+                    placeholder="Enter state"
+                    required
                   />
                   <FormInputField
-                    name="creditLimit"
-                    label="Credit Limit"
-                    type="number"
+                    name="address.postalCode"
+                    label="Postal Code"
+                    placeholder="Enter postal code"
+                    required
                   />
                   <FormInputField
-                    name="balance"
-                    label="Balance"
-                    type="number"
+                    name="address.country"
+                    label="Country"
+                    placeholder="Enter country"
                     required
                   />
                 </div>
                 <div className="space-y-4">
                   <FormInputField
-                    name="rating"
-                    label="Rating (0-5)"
-                    type="number"
-                  />
-                  <FormInputField
                     name="leadTime"
                     label="Lead Time (days)"
-                    type="number"
-                  />
-                  <FormInputField
-                    name="minimumOrderValue"
-                    label="Minimum Order Value"
                     type="number"
                   />
                   <FormTextAreaField

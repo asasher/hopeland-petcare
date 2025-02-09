@@ -9,55 +9,34 @@ import type { Customer } from "@/lib/types/customer";
 import { customerStore } from "@/lib/state/customers";
 import { useObservable } from "@legendapp/state/react";
 import { CustomerForm } from "./customer-form";
-import { formatCurrency } from "@/lib/utils/format";
 
 const columns: ColumnDef<Customer>[] = [
   {
-    accessorKey: "code",
-    header: "Code",
+    accessorKey: "name",
+    header: "Name",
   },
   {
-    accessorKey: "firstName",
-    header: "First Name",
+    accessorKey: "email",
+    header: "Email",
   },
   {
-    accessorKey: "lastName",
-    header: "Last Name",
+    accessorKey: "phone",
+    header: "Phone",
   },
   {
-    accessorKey: "company",
-    header: "Company",
-  },
-  {
-    accessorKey: "status",
+    accessorKey: "isActive",
     header: "Status",
     cell: ({ row }) => (
-      <span className={`capitalize ${getStatusColor(row.original.status)}`}>
-        {row.original.status}
+      <span
+        className={`capitalize ${
+          row.original.isActive ? "text-green-500" : "text-gray-500"
+        }`}
+      >
+        {row.original.isActive ? "Active" : "Inactive"}
       </span>
     ),
   },
-  {
-    accessorKey: "balance",
-    header: "Balance",
-    cell: ({ row }) => formatCurrency(row.original.balance),
-  },
-  {
-    accessorKey: "creditLimit",
-    header: "Credit Limit",
-    cell: ({ row }) =>
-      row.original.creditLimit ? formatCurrency(row.original.creditLimit) : "-",
-  },
 ];
-
-const getStatusColor = (status: string) => {
-  const colors = {
-    active: "text-green-500",
-    inactive: "text-gray-500",
-    blocked: "text-red-500",
-  };
-  return colors[status as keyof typeof colors] || "text-gray-500";
-};
 
 export function CustomerList() {
   const [isCreating, setIsCreating] = useState(false);
@@ -81,24 +60,14 @@ export function CustomerList() {
         <DataTable
           columns={columns}
           data={customerList}
-          searchKey="code"
+          searchKey="name"
           toolbar={
             <div className="flex items-center space-x-4">
               <span className="text-sm text-muted-foreground">
                 {customerList.length} customers
               </span>
               <span className="text-sm text-muted-foreground">
-                Active:{" "}
-                {customerList.filter((c) => c.status === "active").length}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                Total Receivables:{" "}
-                {formatCurrency(
-                  customerList.reduce(
-                    (sum, customer) => sum + customer.balance,
-                    0,
-                  ),
-                )}
+                Active: {customerList.filter((c) => c.isActive).length}
               </span>
             </div>
           }

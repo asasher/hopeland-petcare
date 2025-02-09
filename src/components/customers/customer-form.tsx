@@ -6,7 +6,6 @@ import { BaseForm } from "@/components/ui/form/base-form";
 import {
   FormInputField,
   FormTextAreaField,
-  FormSelectField,
   FormSwitchField,
 } from "@/components/ui/form/form-field";
 import {
@@ -16,83 +15,59 @@ import {
   DialogTitle,
   DialogPortal,
 } from "@/components/ui/dialog";
-import type { Customer, CustomerStatus } from "@/lib/types/customer";
+import type { Customer } from "@/lib/types/customer";
 import { customerActions } from "@/lib/state/customers";
 
 const customerSchema = z.object({
-  code: z.string().min(1, "Customer code is required"),
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  company: z.string().optional(),
-  status: z.enum(["active", "inactive", "blocked"] as const),
-  addresses: z.array(
-    z.object({
-      type: z.enum(["billing", "shipping"] as const),
-      address: z.string().min(1),
-      city: z.string().min(1),
-      state: z.string().min(1),
-      country: z.string().min(1),
-      postalCode: z.string().min(1),
-      isDefault: z.boolean(),
-    }),
-  ),
-  contacts: z.array(
-    z.object({
-      type: z.enum(["phone", "email", "other"] as const),
-      value: z.string().min(1),
-      isPrimary: z.boolean(),
-    }),
-  ),
-  preferences: z.object({
-    preferredContactMethod: z.enum(["phone", "email", "sms"] as const),
-    marketingOptIn: z.boolean(),
-    notificationSettings: z.object({
-      orderUpdates: z.boolean(),
-      promotions: z.boolean(),
-      newsletter: z.boolean(),
-    }),
+  name: z.string().min(1, "Name is required"),
+  isActive: z.boolean().default(true),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(1, "Phone number is required"),
+  address: z.object({
+    street: z.string().min(1, "Street is required"),
+    city: z.string().min(1, "City is required"),
+    state: z.string().min(1, "State is required"),
+    postalCode: z.string().min(1, "Postal code is required"),
+    country: z.string().min(1, "Country is required"),
   }),
-  taxId: z.string().optional(),
+  contacts: z.array(
+    z.discriminatedUnion("contactType", [
+      z.object({
+        contactType: z.literal("email"),
+        name: z.string().min(1, "Name is required"),
+        email: z.string().email("Invalid email"),
+        phone: z.string().optional(),
+        role: z.string().min(1, "Role is required"),
+      }),
+      z.object({
+        contactType: z.literal("phone"),
+        name: z.string().min(1, "Name is required"),
+        email: z.string().email().optional(),
+        phone: z.string().min(1, "Phone is required"),
+        role: z.string().min(1, "Role is required"),
+      }),
+    ]),
+  ),
   notes: z.string().optional(),
-  tags: z.array(z.string()),
-  creditLimit: z.number().optional(),
-  balance: z.number(),
 });
 
 type CustomerFormValues = z.infer<typeof customerSchema>;
 
 const defaultFormValues: CustomerFormValues = {
-  code: "",
-  firstName: "",
-  lastName: "",
-  company: "",
-  status: "active",
-  addresses: [],
-  contacts: [],
-  preferences: {
-    preferredContactMethod: "email",
-    marketingOptIn: false,
-    notificationSettings: {
-      orderUpdates: true,
-      promotions: false,
-      newsletter: false,
-    },
+  name: "",
+  isActive: true,
+  email: "",
+  phone: "",
+  address: {
+    street: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    country: "",
   },
-  tags: [],
-  balance: 0,
+  contacts: [],
+  notes: "",
 };
-
-const statusOptions = [
-  { label: "Active", value: "active" },
-  { label: "Inactive", value: "inactive" },
-  { label: "Blocked", value: "blocked" },
-];
-
-const contactMethodOptions = [
-  { label: "Phone", value: "phone" },
-  { label: "Email", value: "email" },
-  { label: "SMS", value: "sms" },
-];
 
 interface CustomerFormProps {
   open: boolean;
@@ -150,78 +125,61 @@ export function CustomerForm({
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <FormInputField
-                    name="code"
-                    label="Customer Code"
-                    placeholder="Enter customer code"
+                    name="name"
+                    label="Name"
+                    placeholder="Enter customer name"
                     required
                   />
                   <FormInputField
-                    name="firstName"
-                    label="First Name"
-                    placeholder="Enter first name"
+                    name="email"
+                    label="Email"
+                    type="email"
+                    placeholder="Enter email address"
                     required
                   />
                   <FormInputField
-                    name="lastName"
-                    label="Last Name"
-                    placeholder="Enter last name"
+                    name="phone"
+                    label="Phone"
+                    placeholder="Enter phone number"
                     required
                   />
                   <FormInputField
-                    name="company"
-                    label="Company"
-                    placeholder="Enter company name"
-                  />
-                  <FormSelectField
-                    name="status"
-                    label="Status"
-                    options={statusOptions}
+                    name="address.street"
+                    label="Street"
+                    placeholder="Enter street address"
                     required
                   />
                   <FormInputField
-                    name="taxId"
-                    label="Tax ID"
-                    placeholder="Enter tax ID"
+                    name="address.city"
+                    label="City"
+                    placeholder="Enter city"
+                    required
                   />
                   <FormInputField
-                    name="creditLimit"
-                    label="Credit Limit"
-                    type="number"
+                    name="address.state"
+                    label="State"
+                    placeholder="Enter state"
+                    required
                   />
                   <FormInputField
-                    name="balance"
-                    label="Balance"
-                    type="number"
+                    name="address.postalCode"
+                    label="Postal Code"
+                    placeholder="Enter postal code"
+                    required
+                  />
+                  <FormInputField
+                    name="address.country"
+                    label="Country"
+                    placeholder="Enter country"
                     required
                   />
                 </div>
                 <div className="space-y-4">
-                  <h3 className="font-medium">Contact Preferences</h3>
-                  <FormSelectField
-                    name="preferences.preferredContactMethod"
-                    label="Preferred Contact Method"
-                    options={contactMethodOptions}
-                    required
-                  />
                   <FormSwitchField
-                    name="preferences.marketingOptIn"
-                    label="Marketing Opt-in"
+                    name="isActive"
+                    label="Active"
+                    description="Customer account is active"
                   />
-                  <h4 className="mt-4 font-medium">Notification Settings</h4>
-                  <FormSwitchField
-                    name="preferences.notificationSettings.orderUpdates"
-                    label="Order Updates"
-                  />
-                  <FormSwitchField
-                    name="preferences.notificationSettings.promotions"
-                    label="Promotions"
-                  />
-                  <FormSwitchField
-                    name="preferences.notificationSettings.newsletter"
-                    label="Newsletter"
-                  />
-                </div>
-                <div className="col-span-2">
                   <FormTextAreaField
                     name="notes"
                     label="Notes"

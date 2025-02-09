@@ -15,7 +15,16 @@ export type Address = {
 
 export type Contact = {
   name: string;
-  email: string;
-  phone: string;
   role: string;
-};
+} & (
+  | {
+      contactType: "email";
+      email: string;
+      phone?: string;
+    }
+  | {
+      contactType: "phone";
+      email?: string;
+      phone: string;
+    }
+);

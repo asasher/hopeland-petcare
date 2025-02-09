@@ -9,41 +9,24 @@ import type { Vendor } from "@/lib/types/vendor";
 import { vendorStore } from "@/lib/state/vendors";
 import { useObservable } from "@legendapp/state/react";
 import { VendorForm } from "./vendor-form";
-import { formatCurrency } from "@/lib/utils/format";
 
 const columns: ColumnDef<Vendor>[] = [
-  {
-    accessorKey: "code",
-    header: "Code",
-  },
   {
     accessorKey: "name",
     header: "Name",
   },
   {
-    accessorKey: "status",
+    accessorKey: "isActive",
     header: "Status",
     cell: ({ row }) => (
-      <span className={`capitalize ${getStatusColor(row.original.status)}`}>
-        {row.original.status}
+      <span
+        className={`capitalize ${
+          row.original.isActive ? "text-green-500" : "text-gray-500"
+        }`}
+      >
+        {row.original.isActive ? "Active" : "Inactive"}
       </span>
     ),
-  },
-  {
-    accessorKey: "balance",
-    header: "Balance",
-    cell: ({ row }) => formatCurrency(row.original.balance),
-  },
-  {
-    accessorKey: "creditLimit",
-    header: "Credit Limit",
-    cell: ({ row }) =>
-      row.original.creditLimit ? formatCurrency(row.original.creditLimit) : "-",
-  },
-  {
-    accessorKey: "rating",
-    header: "Rating",
-    cell: ({ row }) => row.original.rating ?? "-",
   },
   {
     accessorKey: "leadTime",
@@ -51,24 +34,7 @@ const columns: ColumnDef<Vendor>[] = [
     cell: ({ row }) =>
       row.original.leadTime ? `${row.original.leadTime} days` : "-",
   },
-  {
-    accessorKey: "minimumOrderValue",
-    header: "Min. Order",
-    cell: ({ row }) =>
-      row.original.minimumOrderValue
-        ? formatCurrency(row.original.minimumOrderValue)
-        : "-",
-  },
 ];
-
-const getStatusColor = (status: string) => {
-  const colors = {
-    active: "text-green-500",
-    inactive: "text-gray-500",
-    blocked: "text-red-500",
-  };
-  return colors[status as keyof typeof colors] || "text-gray-500";
-};
 
 export function VendorList() {
   const [isCreating, setIsCreating] = useState(false);
@@ -92,20 +58,14 @@ export function VendorList() {
         <DataTable
           columns={columns}
           data={vendorList}
-          searchKey="code"
+          searchKey="name"
           toolbar={
             <div className="flex items-center space-x-4">
               <span className="text-sm text-muted-foreground">
                 {vendorList.length} vendors
               </span>
               <span className="text-sm text-muted-foreground">
-                Active: {vendorList.filter((v) => v.status === "active").length}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                Total Payables:{" "}
-                {formatCurrency(
-                  vendorList.reduce((sum, vendor) => sum + vendor.balance, 0),
-                )}
+                Active: {vendorList.filter((v) => v.isActive).length}
               </span>
             </div>
           }
