@@ -1,23 +1,18 @@
-import type { BaseEntity } from "./common";
-import type { Address, Contact } from "./customer";
-
-// Vendor status
-export type VendorStatus = "active" | "inactive" | "blocked";
+import type { BaseEntity, Address, Contact } from "./common";
 
 // Main vendor type
+export type VendorStatus = "active" | "inactive";
+
 export type Vendor = BaseEntity & {
-  code: string;
   name: string;
+  email: string;
+  phone: string;
   status: VendorStatus;
-  addresses: Address[];
+  address: Address;
   contacts: Contact[];
-  taxId?: string;
-  website?: string;
   notes?: string;
-  tags: string[];
+  taxId?: string;
   creditLimit?: number;
-  balance: number;
   rating?: number;
   leadTime?: number; // in days
-  minimumOrderValue?: number;
 };

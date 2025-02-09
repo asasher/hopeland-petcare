@@ -88,6 +88,8 @@
   - [x] Remove the Reports link and the reports page since we don't need it
   - [x] Run pnpm lint again and fix all errors and warnings
   - [x] Git add and commit the changes
+  - [ ] vendor.ts have been update the rest of the codebase accordingly
+  - [ ] Move Address and Contact types to common.ts
 
 9. Setup Sync with Supabase
    - [ ] Setup Supabase plugin following https://legendapp.com/open-source/state/v3/sync/supabase/

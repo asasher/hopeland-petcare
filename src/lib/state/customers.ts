@@ -2,7 +2,8 @@ import { computed } from "@legendapp/state";
 import type { Observable } from "@legendapp/state";
 import { createDomainStore } from "./base";
 import type { BaseState } from "./base";
-import type { Customer, CustomerStatus, Address } from "../types/customer";
+import type { Customer, CustomerStatus } from "../types/customer";
+import type { Address } from "../types/common";
 
 // Customer specific state
 type CustomerState = BaseState<Customer> & {
@@ -16,11 +17,7 @@ type CustomerState = BaseState<Customer> & {
 // Initialize state
 const initialState: Partial<CustomerState> = {
   items: {},
-  customersByStatus: {
-    active: [],
-    inactive: [],
-    blocked: [],
-  },
+  customersByStatus: {} as Record<CustomerStatus, string[]>,
   totalCustomers: 0,
   activeCustomers: 0,
   totalReceivables: 0,
@@ -34,6 +31,13 @@ export const customerStore = createDomainStore<Customer>(
 ) as unknown as Observable<CustomerState>;
 
 // Computed values
+export const activeCustomers = computed(() => {
+  const customers = Object.values(
+    customerStore.items.peek() || {},
+  ) as Customer[];
+  return customers.filter((customer) => customer.status === "active");
+});
+
 export const customersByStatus = computed(() => {
   const customers = Object.values(customerStore.items.peek() ?? {});
   return customers.reduce(
@@ -100,80 +104,42 @@ export const customerActions = {
   addCustomer: (customer: Customer) => {
     const items = customerStore.items.peek() ?? {};
     customerStore.items.set({ ...items, [customer.id]: customer });
-
-    // Update status indexes
-    const customersByStatus = customerStore.customersByStatus.peek() ?? {};
-    const currentStatusCustomers = customersByStatus[customer.status] ?? [];
-    customersByStatus[customer.status] = [
-      ...currentStatusCustomers,
-      customer.id,
-    ];
-    customerStore.customersByStatus.set(customersByStatus);
-
-    // Update default address if exists
-    const defaultAddress = customer.addresses.find((addr) => addr.isDefault);
-    if (defaultAddress) {
-      const defaultAddresses = customerStore.defaultAddresses.peek() ?? {};
-      defaultAddresses[customer.id] = defaultAddress;
-      customerStore.defaultAddresses.set(defaultAddresses);
-    }
   },
 
   updateCustomer: (id: string, updates: Partial<Customer>) => {
     const items = customerStore.items.peek() ?? {};
     const current = items[id];
     if (current) {
-      const updated = { ...current, ...updates };
-      customerStore.items.set({ ...items, [id]: updated });
-
-      // Update status indexes if status changed
-      if (updates.status && updates.status !== current.status) {
-        const customersByStatus = customerStore.customersByStatus.peek() ?? {};
-        const currentStatusCustomers = customersByStatus[current.status] ?? [];
-        const newStatusCustomers = customersByStatus[updates.status] ?? [];
-
-        customersByStatus[current.status] = currentStatusCustomers.filter(
-          (customerId) => customerId !== id,
-        );
-        customersByStatus[updates.status] = [...newStatusCustomers, id];
-        customerStore.customersByStatus.set(customersByStatus);
-      }
-
-      // Update default address if addresses changed
-      if (updates.addresses) {
-        const defaultAddress = updates.addresses.find((addr) => addr.isDefault);
-        const defaultAddresses = customerStore.defaultAddresses.peek() ?? {};
-        if (defaultAddress) {
-          defaultAddresses[id] = defaultAddress;
-        } else {
-          delete defaultAddresses[id];
-        }
-        customerStore.defaultAddresses.set(defaultAddresses);
-      }
+      customerStore.items.set({
+        ...items,
+        [id]: { ...current, ...updates },
+      });
     }
   },
 
   deleteCustomer: (id: string) => {
     const items = customerStore.items.peek() ?? {};
-    const customer = items[id];
-    if (customer) {
-      // Remove from main items
-      delete items[id];
-      customerStore.items.set(items);
+    delete items[id];
+    customerStore.items.set(items);
+  },
 
-      // Remove from status indexes
-      const customersByStatus = customerStore.customersByStatus.peek() ?? {};
-      const currentStatusCustomers = customersByStatus[customer.status] ?? [];
-      customersByStatus[customer.status] = currentStatusCustomers.filter(
-        (customerId) => customerId !== id,
-      );
-      customerStore.customersByStatus.set(customersByStatus);
-
-      // Remove from default addresses
-      const defaultAddresses = customerStore.defaultAddresses.peek() ?? {};
-      delete defaultAddresses[id];
-      customerStore.defaultAddresses.set(defaultAddresses);
+  updateStatus: (id: string, status: CustomerStatus) => {
+    const items = customerStore.items.peek() ?? {};
+    const current = items[id];
+    if (current) {
+      customerStore.items.set({
+        ...items,
+        [id]: { ...current, status },
+      });
     }
+  },
+
+  updateDefaultAddress: (id: string, address: Address) => {
+    const addresses = customerStore.defaultAddresses.peek() ?? {};
+    customerStore.defaultAddresses.set({
+      ...addresses,
+      [id]: address,
+    });
   },
 
   updateBalance: (id: string, amount: number) => {

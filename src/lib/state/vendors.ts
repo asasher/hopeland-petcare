@@ -3,7 +3,7 @@ import type { Observable } from "@legendapp/state";
 import { createDomainStore } from "./base";
 import type { BaseState } from "./base";
 import type { Vendor, VendorStatus } from "../types/vendor";
-import type { Address } from "../types/customer";
+import type { Address } from "../types/common";
 
 // Vendor specific state
 type VendorState = BaseState<Vendor> & {
