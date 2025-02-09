@@ -2,12 +2,11 @@
 
 ## Instructions
 
-1. After each task run `pnpm lint`, if there are errors fix them, ingore warnings.
-2. After each task is completed, mark it as done in `README.md` file.
-3. After each task is completed run `git add -A` and `git commit -m "feat: <task-description>"`. Do not push.
-4. Do not ask for confirmation before running commands, you can run them directly.
-5. Do not ask for confirmation before running next task, just continue.
-6. After each task read `README.md` file again to remeber these instructions.
+1. After each task
+  1. Eun `pnpm lint`, if there are errors fix them, ingore warnings.
+  2. Mark it as done in `README.md` file.
+  3. Run `git add -A` and `git commit -m "feat: <task-description>"`. Do not push.
+2. After each task read `README.md` file again to remeber these instructions.
 
 ## Tasks
 
