@@ -3,23 +3,14 @@ import type { Observable } from "@legendapp/state";
 import { createDomainStore } from "./base";
 import type { BaseState } from "./base";
 import type { Customer } from "../types/customer";
-import type { Address } from "../types/common";
+import { mockCustomers } from "./mock-data";
 
 // Customer specific state
-type CustomerState = BaseState<Customer> & {
-  totalCustomers: number;
-  activeCustomers: number;
-  totalReceivables: number;
-  defaultAddresses: Record<string, Address>;
-};
+type CustomerState = BaseState<Customer>;
 
 // Initialize state
 const initialState: Partial<CustomerState> = {
-  items: {},
-  totalCustomers: 0,
-  activeCustomers: 0,
-  totalReceivables: 0,
-  defaultAddresses: {},
+  items: mockCustomers,
 };
 
 // Create the store with type
