@@ -69,11 +69,6 @@ const navItems = [
     title: "Accounting",
     icon: <DollarSign className="h-4 w-4" />,
   },
-  {
-    href: "/settings",
-    title: "Settings",
-    icon: <Settings className="h-4 w-4" />,
-  },
 ];
 
 export function AppSidebar() {
