@@ -3,7 +3,7 @@
 ## Instructions
 
 1. After each task
-  1. Eun `pnpm lint`, if there are errors fix them, ingore warnings.
+  1. Run `pnpm lint`, if there are errors fix them, ingore warnings.
   2. Mark it as done in `README.md` file, if the task is not present in the `README.md` file, add it and mark it as done.
   3. Run `git add -A` and `git commit -m "feat: <task-description>"`. Do not push.
 2. After each task read `README.md` file again to remeber these instructions.
@@ -96,12 +96,17 @@
   - [x] Change CustomerList from DataTable to a list of cards with search and filter
   - [x] Add search bar to the top of the CustomerList with fuzzy search on each of the customer fields using fuse.js, install fuse.js if not installed using `pnpm add fuse.js`
 
-10. Settings Page
+10. Mock Data
+  - [x] Create mock data for all entities
+  - [x] Add mock data initialization to domain stores
+  - [x] Ensure type safety for mock data
+
+11. Settings Page
   - [x] Create settings page with application data reset functionality
   - [x] Add confirmation dialog for data reset
   - [x] Implement reset functionality to clear all domain stores
 
-11. Setup Sync with Supabase
+12. Setup Sync with Supabase
    - [ ] Setup Supabase plugin following https://legendapp.com/open-source/state/v3/sync/supabase/
 
 Notes:
