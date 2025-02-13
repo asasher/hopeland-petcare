@@ -35,8 +35,10 @@ export const mockVendors: Record<string, Vendor> = {
     name: "Pet Supplies Co",
     isActive: true,
     address: "456 Market St, Los Angeles, CA 90012",
-    phoneNumber: "213-555-0123",
-    email: "bob@petsupplies.com",
+    contact: {
+      phone: "213-555-0123",
+      email: "bob@petsupplies.com",
+    },
     notes: "Premium supplier",
     leadTime: 3,
     createdAt: generateDate(180),
