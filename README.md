@@ -108,7 +108,7 @@
 
 12. Simplify and clean-up the code
   - [x] I've removed accounting.ts, propogate those changes to the codebase, remove relevant pages and forms
-  - [ ] I've simplified the product.ts, propogate those changes to the codebase
+  - [x] I've simplified the product.ts, propogate those changes to the codebase
   - [ ] I've simplified the purchase.ts, propogate those changes to the codebase
   - [ ] I've simplified the sales.ts, propogate those changes to the codebase
   - [ ] I've simplified the customer.ts, propogate those changes to the codebase

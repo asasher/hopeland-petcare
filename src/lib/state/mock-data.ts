@@ -47,6 +47,7 @@ export const mockProducts: Record<string, Product> = {
     id: "product-1",
     name: "Premium Dog Food",
     description: "High-quality dog food for all breeds",
+    price: 49.99,
     isActive: true,
     notes: "Best seller",
     createdAt: generateDate(90),
@@ -64,7 +65,6 @@ export const mockSalesOrders: Record<string, SalesOrder> = {
     items: [
       {
         productId: "product-1",
-        variantId: "default",
         quantity: 5,
         unitPrice: 49.99,
         discount: 0,
@@ -113,7 +113,6 @@ export const mockPurchaseOrders: Record<string, PurchaseOrder> = {
     items: [
       {
         productId: "product-1",
-        variantId: "default",
         quantity: 100,
         unitPrice: 29.99,
         tax: 299.9,
