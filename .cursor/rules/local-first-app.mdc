@@ -14,7 +14,7 @@ This is a local first app.
 You will only use LegendState with Supabase plugin for state management.
 Since this is a local first app, all components should be client components with "use client" directive.
 
-## Style and Structure
+## Style
 
 Prefer to use Shadcn UI components where possible. Install the components if not already installed.
 Prefer to use Lucide icons where possible.
@@ -33,6 +33,10 @@ When creating components don't use default export, use named export.
 
 Prefer to use type instead of inteface for all types.
 Prefer inference instead of explicit type declaration.
+
+## ESLint Usage
+
+Make sure to follow linting rules in [.eslintrc.cjs](mdc:.eslintrc.cjs) when writing code to avoid linter errors
 
 ## Important Instructions
 
