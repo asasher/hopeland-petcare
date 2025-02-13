@@ -1,54 +1,5 @@
 import type { BaseEntity } from "./common";
 
-// Inventory transaction types
-export type InventoryTransactionType =
-  | "purchase"
-  | "sale"
-  | "return"
-  | "adjustment"
-  | "transfer";
-
-// Inventory location
-export type Location = BaseEntity & {
-  code: string;
-  name: string;
-  address: string;
-  city: string;
-  state: string;
-  country: string;
-  postalCode: string;
-  isActive: boolean;
-  notes?: string;
-};
-
-// Stock level
-export type StockLevel = {
-  productId: string;
-  variantId: string;
-  locationId: string;
-  quantity: number;
-  reservedQuantity: number;
-  availableQuantity: number;
-  reorderPoint: number;
-  reorderQuantity: number;
-};
-
-// Inventory transaction
-export type InventoryTransaction = BaseEntity & {
-  transactionNumber: string;
-  type: InventoryTransactionType;
-  productId: string;
-  variantId: string;
-  fromLocationId?: string;
-  toLocationId: string;
-  quantity: number;
-  unitCost: number;
-  totalCost: number;
-  reference?: string;
-  notes?: string;
-  performedBy: string;
-};
-
 // Inventory adjustment reason
 export type AdjustmentReason =
   | "damage"
@@ -60,42 +11,15 @@ export type AdjustmentReason =
 
 // Inventory adjustment
 export type InventoryAdjustment = BaseEntity & {
-  adjustmentNumber: string;
-  locationId: string;
+  productId: string;
+  adjustmentValue: number; // this will change the available quantity of the product and later used to calculate availableQuantity
   reason: AdjustmentReason;
-  description: string;
-  items: Array<{
-    productId: string;
-    variantId: string;
-    quantity: number;
-    unitCost: number;
-    totalCost: number;
-    notes?: string;
-  }>;
-  status: "draft" | "posted" | "void";
-  postedBy?: string;
-  postedAt?: string;
   notes?: string;
 };
 
-// Inventory item status
-export type InventoryItemStatus = "active" | "inactive" | "discontinued";
-
 // Inventory item
 export type InventoryItem = BaseEntity & {
-  code: string;
-  name: string;
-  description?: string;
-  category: string;
-  unit: string;
-  stockLevel: number;
-  reservedQuantity: number;
-  availableQuantity: number;
-  reorderPoint: number;
-  reorderQuantity: number;
-  averageCost: number;
-  location: string;
-  status: InventoryItemStatus;
+  productId: string;
+  availableQuantity: number; // calculated from all purchase orders, sales orders and inventory adjustments
   notes?: string;
-  tags: string[];
 };

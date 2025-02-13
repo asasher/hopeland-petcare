@@ -18,12 +18,10 @@ import {
   Store,
   Users,
   Truck,
-  BarChart,
   Boxes,
   LogOut,
   Settings,
   User,
-  DollarSign,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -63,11 +61,6 @@ const navItems = [
     href: "/inventory",
     title: "Inventory",
     icon: <Boxes className="h-4 w-4" />,
-  },
-  {
-    href: "/accounting",
-    title: "Accounting",
-    icon: <DollarSign className="h-4 w-4" />,
   },
 ];
 

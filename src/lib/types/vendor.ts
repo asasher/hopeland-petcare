@@ -1,10 +1,11 @@
-import type { BaseEntity, Address, Contact } from "./common";
+import type { BaseEntity } from "./common";
 
 export type Vendor = BaseEntity & {
   name: string;
   isActive: boolean;
-  address: Address;
-  contacts: Contact[];
+  address: string;
+  phoneNumber: string;
+  email?: string;
   notes?: string;
   leadTime?: number; // in days
 };

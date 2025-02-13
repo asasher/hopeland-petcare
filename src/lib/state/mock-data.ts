@@ -3,7 +3,6 @@ import type { Vendor } from "../types/vendor";
 import type { Product } from "../types/product";
 import type { SalesOrder } from "../types/sales";
 import type { PurchaseOrder } from "../types/purchase";
-import type { Account } from "../types/accounting";
 
 // Mock data generator utilities
 const generateId = () => crypto.randomUUID();
@@ -19,27 +18,9 @@ export const mockCustomers: Record<string, Customer> = {
     id: "customer-1",
     name: "John's Pet Shop",
     isActive: true,
-    address: {
-      street: "123 Main St",
-      city: "San Francisco",
-      state: "CA",
-      postalCode: "94105",
-      country: "USA",
-    },
-    contacts: [
-      {
-        contactType: "email" as const,
-        name: "John Doe",
-        email: "john@petshop.com",
-        role: "Owner",
-      },
-      {
-        contactType: "phone" as const,
-        name: "Jane Doe",
-        phone: "415-555-0123",
-        role: "Manager",
-      },
-    ],
+    address: "123 Main St, San Francisco, CA 94105",
+    phoneNumber: "415-555-0123",
+    email: "john@petshop.com",
     notes: "Regular customer since 2020",
     createdAt: generateDate(365),
     updatedAt: generateDate(30),
@@ -51,21 +32,9 @@ export const mockVendors: Record<string, Vendor> = {
     id: "vendor-1",
     name: "Pet Supplies Co",
     isActive: true,
-    address: {
-      street: "456 Market St",
-      city: "Los Angeles",
-      state: "CA",
-      postalCode: "90012",
-      country: "USA",
-    },
-    contacts: [
-      {
-        contactType: "email" as const,
-        name: "Bob Smith",
-        email: "bob@petsupplies.com",
-        role: "Sales Rep",
-      },
-    ],
+    address: "456 Market St, Los Angeles, CA 90012",
+    phoneNumber: "213-555-0123",
+    email: "bob@petsupplies.com",
     notes: "Premium supplier",
     leadTime: 3,
     createdAt: generateDate(180),
@@ -169,34 +138,5 @@ export const mockPurchaseOrders: Record<string, PurchaseOrder> = {
     updatedAt: generateDate(0),
     approvedBy: "John Smith",
     approvedAt: generateDate(13),
-  },
-};
-
-export const mockAccounts: Record<string, Account> = {
-  "account-1": {
-    id: "account-1",
-    code: "1000",
-    name: "Cash",
-    type: "asset",
-    category: "current-asset",
-    description: "Cash on hand",
-    isActive: true,
-    balance: 50000,
-    tags: ["cash", "current-asset"],
-    createdAt: generateDate(365),
-    updatedAt: generateDate(0),
-  },
-  "account-2": {
-    id: "account-2",
-    code: "4000",
-    name: "Sales Revenue",
-    type: "revenue",
-    category: "operating-revenue",
-    description: "Revenue from sales",
-    isActive: true,
-    balance: 150000,
-    tags: ["revenue", "sales"],
-    createdAt: generateDate(365),
-    updatedAt: generateDate(0),
   },
 };
