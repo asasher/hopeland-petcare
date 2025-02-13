@@ -114,7 +114,7 @@
   - [x] I've simplified the sales.ts, propogate those changes to the codebase
   - [x] I've simplified the customer.ts, propogate those changes to the codebase
   - [x] I've simplified the vendor.ts, propogate those changes to the codebase
-  - [ ] I've simplified the inventory.ts, propogate those changes to the codebase
+  - [x] I've simplified the inventory.ts, propogate those changes to the codebase
   
 
 12. Setup Sync with Supabase

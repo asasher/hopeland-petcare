@@ -3,6 +3,7 @@ import type { Vendor } from "../types/vendor";
 import type { Product } from "../types/product";
 import type { SalesOrder } from "../types/sales";
 import type { PurchaseOrder } from "../types/purchase";
+import type { InventoryItem, InventoryAdjustment } from "../types/inventory";
 
 // Mock data generator utilities
 const generateId = () => crypto.randomUUID();
@@ -108,5 +109,28 @@ export const mockPurchaseOrders: Record<string, PurchaseOrder> = {
     notes: "Quarterly stock replenishment",
     createdAt: generateDate(14),
     updatedAt: generateDate(0),
+  },
+};
+
+export const mockInventoryItems: Record<string, InventoryItem> = {
+  "inventory-1": {
+    id: "inventory-1",
+    productId: "product-1",
+    quantity: 150,
+    notes: "Regular stock item",
+    createdAt: generateDate(90),
+    updatedAt: generateDate(0),
+  },
+};
+
+export const mockInventoryAdjustments: Record<string, InventoryAdjustment> = {
+  "adjustment-1": {
+    id: "adjustment-1",
+    productId: "product-1",
+    quantity: -5,
+    reason: "damage",
+    notes: "Damaged during storage",
+    createdAt: generateDate(7),
+    updatedAt: generateDate(7),
   },
 };
