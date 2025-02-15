@@ -1,113 +1,61 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Plus, Search } from "lucide-react";
-import type { Customer } from "@/lib/types/customer";
-import { customerStore } from "@/lib/state/customers";
+import { useState } from "react";
 import { useObservable } from "@legendapp/state/react";
-import { CustomerForm } from "./customer-form";
+import { customerStore } from "@/lib/state/customers";
 import { CustomerCard } from "./customer-card";
-import Fuse from "fuse.js";
+import { CustomerForm } from "./customer-form";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 export function CustomerList() {
-  const [isCreating, setIsCreating] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const customers = useObservable(customerStore.items);
-  const [customerList, setCustomerList] = useState<Customer[]>([]);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Initial value
-    setCustomerList(Object.values(customers.get() || {}));
-
-    // Subscribe to changes
-    const unsubscribe = customers.onChange((value) => {
-      setCustomerList(Object.values(value || {}));
-    });
-
-    // Cleanup subscription
-    return unsubscribe;
-  }, [customers]);
-
-  const fuse = useMemo(
-    () =>
-      new Fuse(customerList, {
-        keys: [
-          "name",
-          "contacts.name",
-          "contacts.email",
-          "contacts.phone",
-          "contacts.role",
-          "address.street",
-          "address.city",
-          "address.state",
-          "address.country",
-          "notes",
-        ],
-        threshold: 0.3,
-        includeMatches: true,
-      }),
-    [customerList],
-  );
-
-  const filteredCustomers = useMemo(() => {
-    if (!searchQuery) return customerList;
-    return fuse.search(searchQuery).map((result) => result.item);
-  }, [searchQuery, customerList, fuse]);
-
-  const handleCreate = () => {
-    setIsCreating(true);
+  const handleOpenForm = (customerId?: string) => {
+    setSelectedCustomer(customerId ?? null);
+    setIsFormOpen(true);
   };
 
+  const handleCloseForm = () => {
+    setSelectedCustomer(null);
+    setIsFormOpen(false);
+  };
+
+  const customerList = Object.entries(customers.get() ?? {}).map(
+    ([id, customer]) => customer,
+  );
+
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-          <h2 className="text-3xl font-bold tracking-tight">Customers</h2>
-          <Button onClick={handleCreate}>
-            <Plus className="mr-2 h-4 w-4" />
-            New Customer
-          </Button>
-        </div>
-        <div className="flex flex-col gap-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search customers..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
-            />
-          </div>
-          <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
-            <span className="text-sm text-muted-foreground">
-              {filteredCustomers.filter((c) => c.isActive).length} active
-            </span>
-            <span className="hidden text-muted-foreground sm:inline">/</span>
-            <span className="text-sm text-muted-foreground">
-              {filteredCustomers.length} total
-            </span>
-          </div>
-        </div>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Customers</h2>
+        <Button onClick={() => handleOpenForm()}>
+          <Plus className="mr-2 h-4 w-4" />
+          Add Customer
+        </Button>
       </div>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredCustomers.map((customer) => (
-          <CustomerCard
+        {customerList.map((customer) => (
+          <div
             key={customer.id}
-            customer={customer}
-            onClick={() => {
-              // Handle click - could open edit form or details view
-            }}
-          />
-        ))}
-        {filteredCustomers.length === 0 && (
-          <div className="col-span-full text-center text-muted-foreground">
-            No customers found
+            className="cursor-pointer"
+            onClick={() => handleOpenForm(customer.id)}
+          >
+            <CustomerCard customer={customer} />
           </div>
-        )}
+        ))}
       </div>
-      <CustomerForm open={isCreating} onClose={() => setIsCreating(false)} />
+
+      <CustomerForm
+        open={isFormOpen}
+        onClose={handleCloseForm}
+        initialData={
+          selectedCustomer ? customers.get()?.[selectedCustomer] : undefined
+        }
+      />
     </div>
   );
 }

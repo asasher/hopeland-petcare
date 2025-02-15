@@ -21,6 +21,7 @@ import { productActions } from "@/lib/state/products";
 const productSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().min(1, "Description is required"),
+  price: z.coerce.number().min(0, "Price must be greater than or equal to 0"),
   isActive: z.boolean().default(true),
   notes: z.string().optional(),
 });
@@ -30,6 +31,7 @@ type ProductFormValues = z.infer<typeof productSchema>;
 const defaultFormValues: ProductFormValues = {
   name: "",
   description: "",
+  price: 0,
   isActive: true,
   notes: "",
 };
@@ -94,6 +96,13 @@ export function ProductForm({ open, onClose, initialData }: ProductFormProps) {
                   name="description"
                   label="Description"
                   placeholder="Enter product description"
+                  required
+                />
+                <FormInputField
+                  name="price"
+                  label="Price"
+                  type="number"
+                  placeholder="Enter product price"
                   required
                 />
                 <FormSwitchField

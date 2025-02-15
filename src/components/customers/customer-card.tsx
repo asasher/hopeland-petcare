@@ -1,80 +1,47 @@
 "use client";
 
 import type { Customer } from "@/lib/types/customer";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Mail, Phone, User } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 
 interface CustomerCardProps {
   customer: Customer;
-  onClick?: () => void;
 }
 
-export function CustomerCard({ customer, onClick }: CustomerCardProps) {
+export function CustomerCard({ customer }: CustomerCardProps) {
   return (
-    <Card
-      className="cursor-pointer transition-shadow hover:shadow-lg"
-      onClick={onClick}
-    >
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <div className="flex flex-col">
-          <h3 className="text-lg font-semibold">{customer.name}</h3>
-          <Badge
-            variant={customer.isActive ? "success" : "secondary"}
-            className="mt-1 w-fit"
-          >
-            {customer.isActive ? "Active" : "Inactive"}
-          </Badge>
+    <Card className="relative">
+      <CardContent className="pt-6">
+        <div className="mb-6 flex items-center justify-between">
+          <h3 className="text-xl font-semibold">{customer.name}</h3>
+          {customer.isActive && <Badge variant="success">Active</Badge>}
         </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {customer.contacts.length > 0 && (
-          <div className="space-y-2">
-            <div className="space-y-2">
-              {customer.contacts.map((contact, index) => (
-                <div key={index} className="flex items-start space-x-2 text-sm">
-                  <User className="mt-0.5 h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <div className="font-medium">{contact.name}</div>
-                    <div className="text-muted-foreground">{contact.role}</div>
-                    <div className="mt-1 flex items-center space-x-2">
-                      {contact.contactType === "email" ? (
-                        <div className="flex items-center space-x-1">
-                          <Mail className="h-3 w-3 text-muted-foreground" />
-                          <span>{contact.email}</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center space-x-1">
-                          <Phone className="h-3 w-3 text-muted-foreground" />
-                          <span>{contact.phone}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Phone className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <span className="text-sm">{customer.contact.phone}</span>
           </div>
-        )}
-        <div className="space-y-2">
-          <div className="flex items-start space-x-2 text-sm">
-            <MapPin className="mt-0.5 h-4 w-4 text-muted-foreground" />
-            <div>
-              <div>{customer.address.street}</div>
-              <div>
-                {customer.address.city}, {customer.address.state}{" "}
-                {customer.address.postalCode}
-              </div>
-              <div>{customer.address.country}</div>
+
+          {customer.contact.email && (
+            <div className="flex items-center gap-2">
+              <Mail className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <span className="text-sm">{customer.contact.email}</span>
             </div>
+          )}
+
+          <div className="flex items-start gap-2">
+            <MapPin className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
+            <span className="text-sm">{customer.address}</span>
           </div>
+
+          {customer.notes && (
+            <div className="mt-4 border-t pt-4">
+              <p className="text-sm text-muted-foreground">{customer.notes}</p>
+            </div>
+          )}
         </div>
-        {customer.notes && (
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium text-muted-foreground">Notes</h4>
-            <p className="text-sm">{customer.notes}</p>
-          </div>
-        )}
       </CardContent>
     </Card>
   );

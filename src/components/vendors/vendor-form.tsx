@@ -21,33 +21,13 @@ import { vendorActions } from "@/lib/state/vendors";
 const vendorSchema = z.object({
   name: z.string().min(1, "Name is required"),
   isActive: z.boolean().default(true),
-  address: z.object({
-    street: z.string().min(1, "Street is required"),
-    city: z.string().min(1, "City is required"),
-    state: z.string().min(1, "State is required"),
-    postalCode: z.string().min(1, "Postal code is required"),
-    country: z.string().min(1, "Country is required"),
+  address: z.string().min(1, "Address is required"),
+  contact: z.object({
+    phone: z.string().min(1, "Phone is required"),
+    email: z.string().email("Invalid email").optional(),
   }),
-  contacts: z.array(
-    z.discriminatedUnion("contactType", [
-      z.object({
-        contactType: z.literal("email"),
-        name: z.string().min(1, "Name is required"),
-        email: z.string().email("Invalid email"),
-        phone: z.string().optional(),
-        role: z.string().min(1, "Role is required"),
-      }),
-      z.object({
-        contactType: z.literal("phone"),
-        name: z.string().min(1, "Name is required"),
-        email: z.string().email().optional(),
-        phone: z.string().min(1, "Phone is required"),
-        role: z.string().min(1, "Role is required"),
-      }),
-    ]),
-  ),
-  notes: z.string().optional(),
   leadTime: z.number().min(0).optional(),
+  notes: z.string().optional(),
 });
 
 type VendorFormValues = z.infer<typeof vendorSchema>;
@@ -55,14 +35,11 @@ type VendorFormValues = z.infer<typeof vendorSchema>;
 const defaultFormValues: VendorFormValues = {
   name: "",
   isActive: true,
-  address: {
-    street: "",
-    city: "",
-    state: "",
-    postalCode: "",
-    country: "",
+  address: "",
+  contact: {
+    phone: "",
+    email: "",
   },
-  contacts: [],
   notes: "",
 };
 
@@ -124,34 +101,21 @@ export function VendorForm({ open, onClose, initialData }: VendorFormProps) {
                     required
                   />
                   <FormInputField
-                    name="address.street"
-                    label="Street"
-                    placeholder="Enter street address"
+                    name="address"
+                    label="Address"
+                    placeholder="Enter full address"
                     required
                   />
                   <FormInputField
-                    name="address.city"
-                    label="City"
-                    placeholder="Enter city"
+                    name="contact.phone"
+                    label="Phone"
+                    placeholder="Enter phone number"
                     required
                   />
                   <FormInputField
-                    name="address.state"
-                    label="State"
-                    placeholder="Enter state"
-                    required
-                  />
-                  <FormInputField
-                    name="address.postalCode"
-                    label="Postal Code"
-                    placeholder="Enter postal code"
-                    required
-                  />
-                  <FormInputField
-                    name="address.country"
-                    label="Country"
-                    placeholder="Enter country"
-                    required
+                    name="contact.email"
+                    label="Email"
+                    placeholder="Enter email"
                   />
                 </div>
                 <div className="space-y-4">

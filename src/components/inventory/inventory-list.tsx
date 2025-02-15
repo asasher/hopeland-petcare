@@ -6,17 +6,18 @@ import { DataTable } from "@/components/ui/table/data-table";
 import { inventoryStore } from "@/lib/state/inventory";
 import { useObservable } from "@legendapp/state/react";
 import { AdjustmentForm } from "./adjustment-form";
+import { productStore } from "@/lib/state/products";
 
 export function InventoryList() {
   const [showAdjustmentForm, setShowAdjustmentForm] = useState(false);
-  const inventory = useObservable(inventoryStore.stockByLocation);
-  const stockByLocation = Object.values(inventory.get() ?? {});
+  const inventory = useObservable(inventoryStore.items);
+  const products = useObservable(productStore.items);
+  const inventoryList = Object.values(inventory.get() ?? {}).map((item) => ({
+    ...item,
+    product: products.get()?.[item.productId]?.name ?? "Unknown Product",
+  }));
 
   const columns = [
-    {
-      accessorKey: "location",
-      header: "Location",
-    },
     {
       accessorKey: "product",
       header: "Product",
@@ -24,14 +25,6 @@ export function InventoryList() {
     {
       accessorKey: "quantity",
       header: "Quantity",
-    },
-    {
-      accessorKey: "reorderPoint",
-      header: "Reorder Point",
-    },
-    {
-      accessorKey: "reorderQuantity",
-      header: "Reorder Quantity",
     },
   ];
 
@@ -44,7 +37,18 @@ export function InventoryList() {
         </Button>
       </div>
 
-      <DataTable columns={columns} data={stockByLocation} />
+      <DataTable
+        columns={columns}
+        data={inventoryList}
+        searchKey="product"
+        toolbar={
+          <div className="flex items-center space-x-2">
+            <span className="text-sm text-muted-foreground">
+              {inventoryList.length} items
+            </span>
+          </div>
+        }
+      />
 
       {showAdjustmentForm && (
         <AdjustmentForm onClose={() => setShowAdjustmentForm(false)} />

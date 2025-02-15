@@ -34,6 +34,7 @@ interface FormInputFieldProps {
   placeholder?: string;
   description?: string;
   required?: boolean;
+  disabled?: boolean;
 }
 
 interface FormTextAreaFieldProps {
@@ -73,6 +74,7 @@ export function FormInputField({
   placeholder,
   description,
   required,
+  disabled,
 }: FormInputFieldProps) {
   const form = useFormContext();
 
@@ -87,7 +89,21 @@ export function FormInputField({
             {required && <span className="ml-1 text-destructive">*</span>}
           </FormLabel>
           <FormControl>
-            <Input type={type} placeholder={placeholder} {...field} />
+            <Input
+              type={type}
+              placeholder={placeholder}
+              disabled={disabled}
+              {...field}
+              onChange={(e) => {
+                if (type === "number") {
+                  const value =
+                    e.target.value === "" ? "" : Number(e.target.value);
+                  field.onChange(value);
+                } else {
+                  field.onChange(e);
+                }
+              }}
+            />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />

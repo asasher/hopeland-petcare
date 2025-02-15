@@ -7,7 +7,6 @@ import {
   FormInputField,
   FormTextAreaField,
   FormSwitchField,
-  FormSelectField,
 } from "@/components/ui/form/form-field";
 import {
   Dialog,
@@ -18,38 +17,15 @@ import {
 } from "@/components/ui/dialog";
 import type { Customer } from "@/lib/types/customer";
 import { customerActions } from "@/lib/state/customers";
-import { Button } from "@/components/ui/button";
 
 const customerSchema = z.object({
   name: z.string().min(1, "Name is required"),
   isActive: z.boolean().default(true),
-  address: z.object({
-    street: z.string().min(1, "Street is required"),
-    city: z.string().min(1, "City is required"),
-    state: z.string().min(1, "State is required"),
-    postalCode: z.string().min(1, "Postal code is required"),
-    country: z.string().min(1, "Country is required"),
+  address: z.string().min(1, "Address is required"),
+  contact: z.object({
+    phone: z.string().min(1, "Phone is required"),
+    email: z.string().email("Invalid email").optional(),
   }),
-  contacts: z
-    .array(
-      z.discriminatedUnion("contactType", [
-        z.object({
-          contactType: z.literal("email"),
-          name: z.string().min(1, "Name is required"),
-          email: z.string().email("Invalid email"),
-          phone: z.string().optional(),
-          role: z.string().min(1, "Role is required"),
-        }),
-        z.object({
-          contactType: z.literal("phone"),
-          name: z.string().min(1, "Name is required"),
-          email: z.string().email().optional(),
-          phone: z.string().min(1, "Phone is required"),
-          role: z.string().min(1, "Role is required"),
-        }),
-      ]),
-    )
-    .min(1, "At least one contact is required"),
   notes: z.string().optional(),
 });
 
@@ -58,14 +34,11 @@ type CustomerFormValues = z.infer<typeof customerSchema>;
 const defaultFormValues: CustomerFormValues = {
   name: "",
   isActive: true,
-  address: {
-    street: "",
-    city: "",
-    state: "",
-    postalCode: "",
-    country: "",
+  address: "",
+  contact: {
+    phone: "",
+    email: "",
   },
-  contacts: [],
   notes: "",
 };
 
@@ -109,7 +82,7 @@ export function CustomerForm({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogPortal>
-        <DialogContent className="sm:max-w-[800px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>
               {initialData ? "Edit Customer" : "Create Customer"}
@@ -121,139 +94,44 @@ export function CustomerForm({
             defaultValues={initialData ?? defaultFormValues}
             isSubmitting={isSubmitting}
           >
-            {(form) => (
-              <div className="grid grid-cols-2 gap-4">
+            {() => (
+              <div className="space-y-4">
+                <FormInputField
+                  name="name"
+                  label="Name"
+                  placeholder="Enter customer name"
+                  required
+                />
+                <FormInputField
+                  name="address"
+                  label="Address"
+                  placeholder="Enter full address"
+                  required
+                />
                 <div className="space-y-4">
                   <FormInputField
-                    name="name"
-                    label="Name"
-                    placeholder="Enter customer name"
+                    name="contact.phone"
+                    label="Phone"
+                    placeholder="Enter phone number"
                     required
                   />
                   <FormInputField
-                    name="address.street"
-                    label="Street"
-                    placeholder="Enter street address"
-                    required
-                  />
-                  <FormInputField
-                    name="address.city"
-                    label="City"
-                    placeholder="Enter city"
-                    required
-                  />
-                  <FormInputField
-                    name="address.state"
-                    label="State"
-                    placeholder="Enter state"
-                    required
-                  />
-                  <FormInputField
-                    name="address.postalCode"
-                    label="Postal Code"
-                    placeholder="Enter postal code"
-                    required
-                  />
-                  <FormInputField
-                    name="address.country"
-                    label="Country"
-                    placeholder="Enter country"
-                    required
+                    name="contact.email"
+                    label="Email"
+                    type="email"
+                    placeholder="Enter email address"
                   />
                 </div>
-                <div className="space-y-4">
-                  <FormSwitchField
-                    name="isActive"
-                    label="Active"
-                    description="Customer account is active"
-                  />
-                  <div className="space-y-2">
-                    <h3 className="font-medium">Contacts</h3>
-                    {form.watch("contacts")?.map((_, index) => (
-                      <div
-                        key={index}
-                        className="space-y-2 rounded-lg border p-4"
-                      >
-                        <FormInputField
-                          name={`contacts.${index}.name`}
-                          label="Name"
-                          placeholder="Enter contact name"
-                          required
-                        />
-                        <FormInputField
-                          name={`contacts.${index}.role`}
-                          label="Role"
-                          placeholder="Enter contact role"
-                          required
-                        />
-                        <FormSelectField
-                          name={`contacts.${index}.contactType`}
-                          label="Contact Type"
-                          options={[
-                            { label: "Email", value: "email" },
-                            { label: "Phone", value: "phone" },
-                          ]}
-                          required
-                        />
-                        {form.watch(`contacts.${index}.contactType`) ===
-                        "email" ? (
-                          <FormInputField
-                            name={`contacts.${index}.email`}
-                            label="Email"
-                            type="email"
-                            placeholder="Enter email address"
-                            required
-                          />
-                        ) : (
-                          <FormInputField
-                            name={`contacts.${index}.phone`}
-                            label="Phone"
-                            placeholder="Enter phone number"
-                            required
-                          />
-                        )}
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => {
-                            const contacts = form.getValues("contacts");
-                            form.setValue(
-                              "contacts",
-                              contacts.filter((_, i) => i !== index),
-                            );
-                          }}
-                        >
-                          Remove Contact
-                        </Button>
-                      </div>
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const contacts = form.getValues("contacts") || [];
-                        form.setValue("contacts", [
-                          ...contacts,
-                          {
-                            contactType: "email",
-                            name: "",
-                            email: "",
-                            role: "",
-                          },
-                        ]);
-                      }}
-                    >
-                      Add Contact
-                    </Button>
-                  </div>
-                  <FormTextAreaField
-                    name="notes"
-                    label="Notes"
-                    placeholder="Enter any notes about the customer"
-                  />
-                </div>
+                <FormSwitchField
+                  name="isActive"
+                  label="Active"
+                  description="Customer account is active"
+                />
+                <FormTextAreaField
+                  name="notes"
+                  label="Notes"
+                  placeholder="Enter any additional notes"
+                />
               </div>
             )}
           </BaseForm>

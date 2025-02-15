@@ -4,8 +4,9 @@
 
 1. After each task
   1. Run `pnpm lint`, if there are errors fix them, ingore warnings.
-  2. Mark it as done in `README.md` file, if the task is not present in the `README.md` file, add it and mark it as done.
-  3. Run `git add -A` and `git commit -m "feat: <task-description>"`. Do not push.
+  2. Run `pnpm build`, if there are errors fix them.
+  3. Mark it as done in `README.md` file, if the task is not present in the `README.md` file, add it and mark it as done.
+  4. Run `git add -A` and `git commit -m "feat: <task-description>"`. Do not push.
 2. After each task read `README.md` file again to remeber these instructions.
 
 ## Tasks
@@ -115,9 +116,15 @@
   - [x] I've simplified the customer.ts, propogate those changes to the codebase
   - [x] I've simplified the vendor.ts, propogate those changes to the codebase
   - [x] I've simplified the inventory.ts, propogate those changes to the codebase
-  
 
-12. Setup Sync with Supabase
+13. Improving UX for Forms
+  - [x] `sales-order-form.tsx` should allow the user to select Customers from a dropdown
+  - [x] `sales-order-form.tsx` should autogenerate a sales order number
+  - [x] `sales-order-form.tsx` should have a price and quantity fields and auto-generate a total
+  - [x] `sales-order-form.tsx` should not have Tracking Number
+  - [ ] Add ability to edit and delete sales orders
+
+14. Setup Sync with Supabase
    - [ ] Setup Supabase plugin following https://legendapp.com/open-source/state/v3/sync/supabase/
 
 Notes:

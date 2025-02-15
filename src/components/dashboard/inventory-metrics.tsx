@@ -3,48 +3,28 @@
 import { useObservable } from "@legendapp/state/react";
 import { inventoryStore } from "@/lib/state/inventory";
 import { formatCurrency } from "@/lib/utils/format";
-import type {
-  InventoryItem,
-  StockLevel,
-  InventoryTransaction,
-} from "@/lib/types/inventory";
+import type { InventoryItem } from "@/lib/types/inventory";
+import { productStore } from "@/lib/state/products";
 
 export function InventoryMetrics() {
-  const inventory = useObservable(inventoryStore);
-  const itemsMap = inventory.items.get() ?? {};
-  const allItems = Object.values(itemsMap) as InventoryItem[];
+  const inventory = useObservable(inventoryStore.items);
+  const products = useObservable(productStore.items);
+  const inventoryList = Object.values(inventory.get() ?? {});
 
   const metrics = {
-    totalItems: allItems.length,
-    totalValue: allItems.reduce(
-      (sum, item) => sum + item.averageCost * item.stockLevel,
-      0,
-    ),
-    lowStockItems: allItems.filter(
-      (item) => item.stockLevel <= item.reorderPoint,
-    ).length,
-    outOfStockItems: allItems.filter((item) => item.stockLevel === 0).length,
+    totalItems: inventoryList.length,
+    totalValue: inventoryList.reduce((sum, item) => {
+      const product = products.get()?.[item.productId];
+      return sum + (product?.price ?? 0) * item.quantity;
+    }, 0),
+    lowStockItems: inventoryList.filter((item) => item.quantity <= 5).length,
+    outOfStockItems: inventoryList.filter((item) => item.quantity === 0).length,
   };
 
-  const stockLevels = inventory.stockLevels.get() ?? {};
-  const allStockLevels = Object.values(stockLevels) as StockLevel[];
-  const stockByLocation = allStockLevels.reduce(
-    (acc, stock) => {
-      if (!acc[stock.locationId]) {
-        acc[stock.locationId] = [];
-      }
-      acc[stock.locationId].push(stock);
-      return acc;
-    },
-    {} as Record<string, StockLevel[]>,
-  );
-
-  const transactionsMap = inventory.transactions.get() ?? {};
-  const allTransactions = Object.values(transactionsMap);
-  const recentTransactions = (allTransactions ?? [])
+  const recentInventory = [...inventoryList]
     .sort(
       (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
     )
     .slice(0, 5);
 
@@ -85,62 +65,27 @@ export function InventoryMetrics() {
       </div>
 
       <div className="rounded-lg border p-4">
-        <h3 className="mb-4 text-lg font-semibold">Stock by Location</h3>
-        <div className="grid grid-cols-4 gap-4">
-          {Object.entries(stockByLocation).map(([locationId, stocks]) => {
-            const locationName =
-              inventory.locations.get()?.[locationId]?.name ?? "Unknown";
-            const totalValue = stocks.reduce(
-              (sum, stock) =>
-                sum +
-                stock.quantity *
-                  ((itemsMap[stock.productId]?.averageCost ?? 0) || 0),
-              0,
-            );
-
-            return (
-              <div key={locationId} className="space-y-2">
-                <div className="text-sm font-medium">{locationName}</div>
-                <div className="space-y-1">
-                  <div className="text-sm text-muted-foreground">
-                    Items: {stocks.length}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Value: {formatCurrency(totalValue)}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="rounded-lg border p-4">
-        <h3 className="mb-4 text-lg font-semibold">Recent Transactions</h3>
+        <h3 className="mb-4 text-lg font-semibold">Recent Inventory Updates</h3>
         <div className="space-y-4">
-          {recentTransactions.map((transaction) => {
-            const item = itemsMap[transaction.productId];
+          {recentInventory.map((item) => {
+            const product = products.get()?.[item.productId];
             return (
               <div
-                key={transaction.id}
+                key={item.id}
                 className="flex items-center justify-between border-b pb-2 last:border-0"
               >
                 <div>
                   <div className="font-medium">
-                    {item?.name ?? "Unknown Product"}
+                    {product?.name ?? "Unknown Product"}
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    {new Date(transaction.createdAt).toLocaleDateString()} -{" "}
-                    {transaction.type}
+                    {new Date(item.updatedAt).toLocaleDateString()}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-medium">
-                    {transaction.quantity > 0 ? "+" : ""}
-                    {transaction.quantity} {item?.unit ?? "units"}
-                  </div>
+                  <div className="font-medium">{item.quantity} units</div>
                   <div className="text-sm text-muted-foreground">
-                    {formatCurrency(transaction.totalCost)}
+                    {formatCurrency((product?.price ?? 0) * item.quantity)}
                   </div>
                 </div>
               </div>

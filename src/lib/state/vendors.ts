@@ -3,21 +3,19 @@ import type { Observable } from "@legendapp/state";
 import { createDomainStore } from "./base";
 import type { BaseState } from "./base";
 import type { Vendor } from "../types/vendor";
-import type { Address } from "../types/common";
+import { mockVendors } from "./mock-data";
 
 // Vendor specific state
 type VendorState = BaseState<Vendor> & {
   totalVendors: number;
   activeVendors: number;
-  defaultAddresses: Record<string, Address>;
 };
 
 // Initialize state
 const initialState: Partial<VendorState> = {
-  items: {},
+  items: mockVendors,
   totalVendors: 0,
   activeVendors: 0,
-  defaultAddresses: {},
 };
 
 // Create the store with type
@@ -65,13 +63,5 @@ export const vendorActions = {
         [id]: { ...current, isActive },
       });
     }
-  },
-
-  updateDefaultAddress: (id: string, address: Address) => {
-    const addresses = vendorStore.defaultAddresses.peek() || {};
-    vendorStore.defaultAddresses.set({
-      ...addresses,
-      [id]: address,
-    });
   },
 };

@@ -20,7 +20,6 @@ import { productStore } from "@/lib/state/products";
 import { salesStore } from "@/lib/state/sales";
 import { purchaseStore } from "@/lib/state/purchases";
 import { inventoryStore } from "@/lib/state/inventory";
-import { accountingStore } from "@/lib/state/accounting";
 
 export function Settings() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -33,8 +32,6 @@ export function Settings() {
     salesStore.items.set({});
     purchaseStore.items.set({});
     inventoryStore.items.set({});
-    accountingStore.accounts.set({});
-    accountingStore.journalEntries.set({});
 
     setShowResetConfirm(false);
   };
@@ -74,7 +71,7 @@ export function Settings() {
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete all
               your data including customers, vendors, products, sales,
-              purchases, inventory, and accounting data.
+              purchases, and inventory data.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

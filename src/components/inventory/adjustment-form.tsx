@@ -1,96 +1,69 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { z } from "zod";
+import { BaseForm } from "@/components/ui/form/base-form";
+import {
+  FormInputField,
+  FormTextAreaField,
+  FormSelectField,
+} from "@/components/ui/form/form-field";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { inventoryStore, inventoryActions } from "@/lib/state/inventory";
-import { useObservable } from "@legendapp/state/react";
 import type { AdjustmentReason } from "@/lib/types/inventory";
+import { inventoryActions } from "@/lib/state/inventory";
+import { productStore } from "@/lib/state/products";
+import { useObservable } from "@legendapp/state/react";
 
 const adjustmentSchema = z.object({
-  productId: z.string(),
-  locationId: z.string(),
-  quantity: z.number(),
-  reason: z.enum(["damage", "loss", "theft", "expiry", "correction", "other"]),
+  productId: z.string().min(1, "Product is required"),
+  quantity: z.number().min(1, "Quantity must be greater than 0"),
+  reason: z.enum(["damage", "correction", "other"] as const),
+  notes: z.string().optional(),
 });
 
-type AdjustmentFormValues = z.infer<typeof adjustmentSchema>;
+type AdjustmentFormData = z.infer<typeof adjustmentSchema>;
+
+const reasonOptions = [
+  { value: "damage", label: "Damage" },
+  { value: "correction", label: "Correction" },
+  { value: "other", label: "Other" },
+];
 
 interface AdjustmentFormProps {
   onClose: () => void;
 }
 
 export function AdjustmentForm({ onClose }: AdjustmentFormProps) {
-  const form = useForm<AdjustmentFormValues>({
-    resolver: zodResolver(adjustmentSchema),
-    defaultValues: {
-      productId: "",
-      locationId: "",
-      quantity: 0,
-      reason: "correction",
-    },
-  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const products = useObservable(productStore.items);
+  const productList = Object.values(products.get() ?? {});
 
-  const products = useObservable(inventoryStore.items);
-  const locations = useObservable(inventoryStore.locations);
+  const handleSubmit = async (data: AdjustmentFormData) => {
+    try {
+      setIsSubmitting(true);
+      const adjustment = {
+        id: crypto.randomUUID(),
+        productId: data.productId,
+        quantity: data.quantity,
+        reason: data.reason,
+        notes: data.notes,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
 
-  const onSubmit = (values: AdjustmentFormValues) => {
-    const adjustment = {
-      id: crypto.randomUUID(),
-      adjustmentNumber: `ADJ-${Date.now()}`,
-      locationId: values.locationId,
-      reason: values.reason,
-      description: values.reason,
-      items: [
-        {
-          productId: values.productId,
-          variantId: "default",
-          quantity: values.quantity,
-          unitCost: 0,
-          totalCost: 0,
-        },
-      ],
-      status: "draft" as const,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    inventoryActions.addAdjustment(adjustment);
-    onClose();
+      inventoryActions.addAdjustment(adjustment);
+      onClose();
+    } catch (error) {
+      console.error("Error saving adjustment:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-
-  const reasonOptions: Array<{ label: string; value: AdjustmentReason }> = [
-    { label: "Damage", value: "damage" },
-    { label: "Loss", value: "loss" },
-    { label: "Theft", value: "theft" },
-    { label: "Expiry", value: "expiry" },
-    { label: "Correction", value: "correction" },
-    { label: "Other", value: "other" },
-  ];
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -99,118 +72,51 @@ export function AdjustmentForm({ onClose }: AdjustmentFormProps) {
           <DialogTitle>New Inventory Adjustment</DialogTitle>
         </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="productId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a product" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {Object.values(products.get() ?? {}).map((product) => (
-                        <SelectItem key={product.id} value={product.id}>
-                          {product.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <BaseForm
+          schema={adjustmentSchema}
+          onSubmit={handleSubmit}
+          defaultValues={{
+            productId: "",
+            quantity: 1,
+            reason: "correction",
+            notes: "",
+          }}
+          isSubmitting={isSubmitting}
+        >
+          {() => (
+            <div className="space-y-4">
+              <FormSelectField
+                name="productId"
+                label="Product"
+                options={productList.map((product) => ({
+                  value: product.id,
+                  label: product.name,
+                }))}
+                required
+              />
 
-            <FormField
-              control={form.control}
-              name="locationId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Location</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a location" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {Object.values(locations.get() ?? {}).map((location) => (
-                        <SelectItem key={location.id} value={location.id}>
-                          {location.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormInputField
+                name="quantity"
+                label="Quantity"
+                type="number"
+                required
+              />
 
-            <FormField
-              control={form.control}
-              name="quantity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Quantity</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormSelectField
+                name="reason"
+                label="Reason"
+                options={reasonOptions}
+                required
+              />
 
-            <FormField
-              control={form.control}
-              name="reason"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Reason</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a reason" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {reasonOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button type="submit">Submit</Button>
+              <FormTextAreaField
+                name="notes"
+                label="Notes"
+                placeholder="Add any notes about this adjustment"
+              />
             </div>
-          </form>
-        </Form>
+          )}
+        </BaseForm>
       </DialogContent>
     </Dialog>
   );

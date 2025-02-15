@@ -48,10 +48,7 @@ const columns: ColumnDef<PurchaseOrder>[] = [
 const getStatusColor = (status: string) => {
   const colors = {
     draft: "text-gray-500",
-    submitted: "text-yellow-500",
-    approved: "text-blue-500",
-    ordered: "text-purple-500",
-    partial: "text-orange-500",
+    ordered: "text-yellow-500",
     received: "text-green-500",
     cancelled: "text-red-500",
   };
@@ -101,13 +98,13 @@ export function PurchaseOrderList() {
                 {formatCurrency(
                   orderList.reduce(
                     (sum, order) =>
-                      order.status === "ordered" || order.status === "partial"
+                      order.status === "ordered"
                         ? sum +
                           order.items.reduce(
                             (itemSum, item) =>
                               itemSum +
-                              (item.quantity - (item.receivedQuantity || 0)) *
-                                item.unitPrice,
+                              ((item.receivedQuantity ?? 0) - item.quantity) *
+                                item.price,
                             0,
                           )
                         : sum,

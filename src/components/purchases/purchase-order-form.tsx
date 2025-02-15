@@ -15,49 +15,33 @@ import {
   DialogTitle,
   DialogPortal,
 } from "@/components/ui/dialog";
-import type { PurchaseOrder, PurchaseOrderStatus } from "@/lib/types/purchase";
+import type { PurchaseOrder } from "@/lib/types/purchase";
 import { purchaseActions } from "@/lib/state/purchases";
+
+const statusOptions = [
+  { label: "Draft", value: "draft" },
+  { label: "Ordered", value: "ordered" },
+  { label: "Received", value: "received" },
+  { label: "Cancelled", value: "cancelled" },
+];
 
 const purchaseOrderSchema = z.object({
   orderNumber: z.string().min(1, "Order number is required"),
   vendorId: z.string().min(1, "Vendor is required"),
-  status: z.enum([
-    "draft",
-    "submitted",
-    "approved",
-    "ordered",
-    "partial",
-    "received",
-    "cancelled",
-  ] as const),
+  status: z.enum(["draft", "ordered", "received", "cancelled"] as const),
   items: z.array(
     z.object({
       productId: z.string(),
-      variantId: z.string(),
       quantity: z.number().min(1),
-      unitPrice: z.number().min(0),
-      tax: z.number().min(0),
+      price: z.number().min(0),
       total: z.number().min(0),
-      receivedQuantity: z.number().min(0),
-      notes: z.string().optional(),
+      receivedQuantity: z.number().min(0).optional(),
     }),
   ),
-  subtotal: z.number().min(0),
-  tax: z.number().min(0),
   total: z.number().min(0),
   expectedDeliveryDate: z.string().optional(),
-  receivingDetails: z
-    .object({
-      receivedAt: z.string(),
-      receivedBy: z.string(),
-      locationId: z.string(),
-      notes: z.string().optional(),
-    })
-    .optional(),
+  receivedAt: z.string().optional(),
   notes: z.string().optional(),
-  tags: z.array(z.string()),
-  approvedBy: z.string().optional(),
-  approvedAt: z.string().optional(),
 });
 
 type PurchaseOrderFormValues = z.infer<typeof purchaseOrderSchema>;
@@ -67,21 +51,9 @@ const defaultFormValues: PurchaseOrderFormValues = {
   vendorId: "",
   status: "draft",
   items: [],
-  subtotal: 0,
-  tax: 0,
   total: 0,
-  tags: [],
+  notes: "",
 };
-
-const statusOptions = [
-  { label: "Draft", value: "draft" },
-  { label: "Submitted", value: "submitted" },
-  { label: "Approved", value: "approved" },
-  { label: "Ordered", value: "ordered" },
-  { label: "Partial", value: "partial" },
-  { label: "Received", value: "received" },
-  { label: "Cancelled", value: "cancelled" },
-];
 
 interface PurchaseOrderFormProps {
   open: boolean;
@@ -135,7 +107,7 @@ export function PurchaseOrderForm({
             defaultValues={initialData ?? defaultFormValues}
             isSubmitting={isSubmitting}
           >
-            {(form) => (
+            {() => (
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <FormInputField
@@ -157,18 +129,6 @@ export function PurchaseOrderForm({
                     required
                   />
                   <FormInputField
-                    name="subtotal"
-                    label="Subtotal"
-                    type="number"
-                    required
-                  />
-                  <FormInputField
-                    name="tax"
-                    label="Tax"
-                    type="number"
-                    required
-                  />
-                  <FormInputField
                     name="total"
                     label="Total"
                     type="number"
@@ -181,43 +141,18 @@ export function PurchaseOrderForm({
                   />
                 </div>
                 <div className="space-y-4">
-                  <h3 className="font-medium">Receiving Details</h3>
-                  {(initialData?.status === "partial" ||
-                    initialData?.status === "received") && (
-                    <>
-                      <FormInputField
-                        name="receivingDetails.receivedAt"
-                        label="Received At"
-                        type="text"
-                      />
-                      <FormInputField
-                        name="receivingDetails.receivedBy"
-                        label="Received By"
-                      />
-                      <FormInputField
-                        name="receivingDetails.locationId"
-                        label="Location"
-                      />
-                      <FormTextAreaField
-                        name="receivingDetails.notes"
-                        label="Receiving Notes"
-                      />
-                    </>
+                  {initialData?.status === "received" && (
+                    <FormInputField
+                      name="receivedAt"
+                      label="Received At"
+                      type="text"
+                    />
                   )}
-                  {(initialData?.status === "approved" ||
-                    initialData?.status === "ordered") && (
-                    <>
-                      <FormInputField name="approvedBy" label="Approved By" />
-                      <FormInputField
-                        name="approvedAt"
-                        label="Approved At"
-                        type="text"
-                      />
-                    </>
-                  )}
-                </div>
-                <div className="col-span-2">
-                  <FormTextAreaField name="notes" label="Order Notes" />
+                  <FormTextAreaField
+                    name="notes"
+                    label="Notes"
+                    placeholder="Add any notes about this order"
+                  />
                 </div>
               </div>
             )}
