@@ -125,7 +125,9 @@
   - [ ] Add ability to edit and delete sales orders
 
 14. Setup Sync with Supabase
-   - [ ] Setup Supabase plugin following https://legendapp.com/open-source/state/v3/sync/supabase/
+  - [ ] Generate sql file for the types in order to create the tables in Supabase
+  - [ ] Create a typed client for the supabase database
+  - [ ] Setup Supabase plugin following https://legendapp.com/open-source/state/v3/sync/supabase/
 
 Notes:
 - All components will be client components with "use client" directive
