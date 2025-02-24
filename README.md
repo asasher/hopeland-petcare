@@ -126,7 +126,7 @@
 
 14. Setup Sync with Supabase
   - [ ] Generate sql file for the types in order to create the tables in Supabase
-  - [ ] Create a typed client for the supabase database
+  - [ ] Create a typed client for the supabase database using this guide https://supabase.com/docs/guides/api/rest/generating-types
   - [ ] Setup Supabase plugin following https://legendapp.com/open-source/state/v3/sync/supabase/
 
 Notes:
